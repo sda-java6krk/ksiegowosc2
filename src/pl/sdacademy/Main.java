@@ -1,5 +1,7 @@
 package pl.sdacademy;
 
+import com.sun.org.apache.bcel.internal.generic.CASTORE;
+import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.controllers.CompanyController;
 import pl.sdacademy.exceptions.AdminNotFoundException;
 import pl.sdacademy.models.Admin;
@@ -14,17 +16,19 @@ public class Main {
         LOGGING_IN_AS_ADMIN,
         LOGGED_IN,
         CREATING_COMPANY,
+        CREATING_ADMIN,
+        DELETING_ADMIN,
         EXIT,
     }
 
     public static void main(String[] args) {
-	    State state = State.INIT;
+        State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
         Admin currentAdmin = null;
 
         while (state != State.EXIT) {
-            switch(state) {
+            switch (state) {
                 case INIT: {
                     System.out.println("Dzień dobry, co chcesz zrobić?");
                     System.out.println(" 1 - zalogować się jako admin");
@@ -73,6 +77,9 @@ public class Main {
                     System.out.println("Co chcesz zrobić?");
                     System.out.println(" 1 - wypisać wszystkie firmy");
                     System.out.println(" 2 - dodać firmę");
+                    System.out.println(" 3 - wypisać wszystkich adminów");
+                    System.out.println(" 4 - dodać admina");
+                    System.out.println(" 5 - usunąć admina");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -84,6 +91,22 @@ public class Main {
 
                         case 2:
                             state = State.CREATING_COMPANY;
+                            scanner.nextLine();
+                            break;
+
+                        case 3:
+                            AdminController.listAdmins();
+                            state = State.LOGGED_IN;
+                            scanner.nextLine();
+                            break;
+
+                        case 4:
+                            state = State.CREATING_ADMIN;
+                            scanner.nextLine();
+                            break;
+
+                        case 5:
+                            state = State.DELETING_ADMIN;
                             scanner.nextLine();
                             break;
 
@@ -114,6 +137,30 @@ public class Main {
                     state = State.LOGGED_IN;
                     break;
                 }
+
+                case CREATING_ADMIN: {
+                    System.out.println("Podaj login nowego admina:");
+                    String login = scanner.nextLine();
+
+                    System.out.println("Podaj haslo nowego admina:");
+                    String password = scanner.nextLine();
+
+                    AdminController.createAdmin(login, password);
+
+                    state = State.LOGGED_IN;
+                    break;
+                }
+
+                case DELETING_ADMIN: {
+                    System.out.println("Podaj login admina do usunięcia:");
+                    String login = scanner.nextLine();
+
+                    AdminController.removeAdmin(login);
+
+                    state = State.LOGGED_IN;
+                    break;
+                }
+
             }
         }
         // write your code here
