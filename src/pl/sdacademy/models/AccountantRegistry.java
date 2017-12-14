@@ -28,7 +28,6 @@ public class AccountantRegistry {
     }
 
     public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort {
-        String accountant1 = accountant.getLogin().toLowerCase();
         if (accountants.contains(accountant)) {
             throw new AccountantAlreadyExistException("podany login jest zajety");
         }
