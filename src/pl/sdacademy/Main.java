@@ -1,6 +1,7 @@
 package pl.sdacademy;
 
 import com.sun.org.apache.bcel.internal.generic.CASTORE;
+import pl.sdacademy.controllers.AccountantController;
 import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.controllers.CompanyController;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
@@ -23,6 +24,8 @@ public class Main {
         CREATING_COMPANY,
         CREATING_ADMIN,
         DELETING_ADMIN,
+        CREATING_ACCOUNTANT,
+        DELETING_ACCOUNTANT,
         EXIT,
     }
 
@@ -145,6 +148,8 @@ public class Main {
                     System.out.println(" 4 - dodać admina");
                     System.out.println(" 5 - usunąć admina");
                     System.out.println(" 6 - dodać konto ksiegowego");
+                    System.out.println(" 7 - usunac konto ksiegoweo");
+                    System.out.println(" 8 - wypisac wszystkich ksiegowych");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -161,7 +166,7 @@ public class Main {
 
                         case 3:
                             AdminController.listAdmins();
-                            state = State.LOGGING_IN_AS_ADMIN;
+                            state = State.LOGGED_IN_AS_ADMIN;
                             scanner.nextLine();
                             break;
 
@@ -175,6 +180,21 @@ public class Main {
                             scanner.nextLine();
                             break;
 
+                        case 6:
+                            state = State.CREATING_ACCOUNTANT;
+                            scanner.nextLine();
+                            break;
+
+                        case 7:
+                            state = State.DELETING_ACCOUNTANT;
+                            scanner.nextLine();
+                            break;
+
+                        case 8:
+                            AccountantController.listAccountant();
+                            state = State.LOGGED_IN_AS_ADMIN;
+                            scanner.nextLine();
+                            break;
                         case 0:
                             state = State.EXIT;
                             scanner.nextLine();
@@ -226,6 +246,23 @@ public class Main {
                     break;
                 }
 
+                case CREATING_ACCOUNTANT: {
+                    System.out.println("Podaj login nowego ksiegowego:");
+                    String login = scanner.nextLine();
+                    System.out.println("Podaj haslo: ");
+                    String password = scanner.nextLine();
+                    AccountantController.createAccountant(login,password);
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
+
+                case DELETING_ACCOUNTANT: {
+                    System.out.println("Podaj login ksiegowego do usuniecia: ");
+                    String login = scanner.nextLine();
+                    AccountantController.removeAccountant(login);
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
             }
         }
         // write your code here
