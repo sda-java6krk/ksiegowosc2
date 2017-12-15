@@ -29,6 +29,21 @@ public class CompanyRegistry {
         this.companies.add(new Company("5987643258","Krakbud s.j.", 1995));
     }
 
+    public void remove(String nip) {
+        boolean removed = false;
+        for (int i = 0; i < companies.size(); i++) {
+            if (companies.get(i).getNip().equals(nip)) {
+                companies.remove(companies.get(i));
+                removed = true;
+            }
+
+        }
+        if (removed == false) {
+            System.out.println("Brak firmy o podanym nipie");
+        }
+
+    }
+
     public boolean findCompanyForNip(String nip) {
 
         for (Company company : companies) {

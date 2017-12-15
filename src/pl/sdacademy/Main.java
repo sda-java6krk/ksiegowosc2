@@ -26,6 +26,7 @@ public class Main {
         DELETING_ADMIN,
         CREATING_ACCOUNTANT,
         DELETING_ACCOUNTANT,
+        DELETING_COMPANY,
         EXIT,
     }
 
@@ -150,6 +151,7 @@ public class Main {
                     System.out.println(" 6 - dodać konto ksiegowego");
                     System.out.println(" 7 - usunac konto ksiegoweo");
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
+                    System.out.println(" 9 - usunac firme");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -195,6 +197,11 @@ public class Main {
                             state = State.LOGGED_IN_AS_ADMIN;
                             scanner.nextLine();
                             break;
+                        case 9:
+                            state = State.DELETING_COMPANY;
+                            scanner.nextLine();
+                            break;
+
                         case 0:
                             state = State.EXIT;
                             scanner.nextLine();
@@ -217,9 +224,11 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
+
                     System.out.println("Podaj nip firmy ");
                     String nip = scanner.nextLine();
                     CompanyController.createCompany(nip,name, yearFound);
+
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -243,6 +252,16 @@ public class Main {
                     String login = scanner.nextLine();
 
                     AdminController.removeAdmin(login);
+
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
+
+                case DELETING_COMPANY: {
+                    System.out.println("Podaj NIP firmy do usunięcia:");
+                    String nip = scanner.nextLine();
+
+                    CompanyController.removeCompany(nip);
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;

@@ -1,5 +1,7 @@
 package pl.sdacademy.models;
 
+import java.util.Set;
+
 /**
  * Created by marcin on 13.12.2017.
  */
@@ -7,11 +9,15 @@ public class Company {
     private String nip;
     private String name;
     private int yearFound;
+    private String nip;
+    private Set<Accountant> accountants;
+
+
 
     public Company(String nip,String name, int yearFound) {
-        this.nip = nip;
         this.name = name;
         this.yearFound = yearFound;
+        this.nip = nip;
     }
     public String getNip() {
         return nip ;
@@ -24,4 +30,9 @@ public class Company {
     public int getYearFound() {
         return yearFound;
     }
+
+    public String getNip() {
+        return nip;
+    }
+
 }

@@ -1,5 +1,6 @@
 package pl.sdacademy.controllers;
 
+
 import pl.sdacademy.exceptions.CompanyNotFoundException;
 import pl.sdacademy.models.Company;
 import pl.sdacademy.models.CompanyRegistry;
@@ -12,12 +13,17 @@ import java.util.Scanner;
  */
 public class CompanyController {
 
+
     public static void createCompany(String nip, String name, int yearFound) {
 
 
             CompanyRegistry.getInstance().add(new Company(nip, name, yearFound));
 
 
+    }
+
+    public static void removeCompany(String nip) {
+        CompanyRegistry.getInstance().remove(nip);
     }
 
     public static void listCompanies() {
