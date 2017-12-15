@@ -8,7 +8,7 @@ import pl.sdacademy.models.InvoiceRegistry;
  */
 public class InvoiceController {
 
-    public static void createInvoice(String type, double netAmmount, double vat, boolean paid ){
-        InvoiceRegistry.getInstance().addFacture(new Invoice(type,netAmmount,vat,paid));
+    public static void createInvoice(String type, double netAmount, double vat, boolean paid ){
+        InvoiceRegistry.getInstance().addFacture(new Invoice(type,netAmount,vat,paid));
     }
 }
