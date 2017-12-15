@@ -224,10 +224,11 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
-                    System.out.println("Podaj NIP nowej firmy:");
-                    String nip = scanner.nextLine();
 
-                    CompanyController.createCompany(name, yearFound, nip);
+                    System.out.println("Podaj nip firmy ");
+                    String nip = scanner.nextLine();
+                    CompanyController.createCompany(nip,name, yearFound);
+
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
