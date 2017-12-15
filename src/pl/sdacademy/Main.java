@@ -1,10 +1,11 @@
 package pl.sdacademy;
 
-import com.sun.org.apache.bcel.internal.generic.CASTORE;
 import pl.sdacademy.controllers.AccountantController;
 import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.controllers.CompanyController;
+import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
+import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AdminNotFoundException;
 import pl.sdacademy.models.Accountant;
 import pl.sdacademy.models.AccountantRegistry;
@@ -82,7 +83,7 @@ public class Main {
                         state = State.LOGGED_IN_AS_ACCOUNTANT;
 
                     } catch (AccountantNotFoundException e) {
-                        System.out.println("Zły login lub hasło");
+                        System.out.println(e.getMessage());
                         state = State.INIT;
                     }
                     break;
@@ -251,7 +252,13 @@ public class Main {
                     String login = scanner.nextLine();
                     System.out.println("Podaj haslo: ");
                     String password = scanner.nextLine();
-                    AccountantController.createAccountant(login,password);
+                    try {
+                        AccountantController.createAccountant(login,password);
+
+                    } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort e) {
+                        System.out.println(e.getMessage());
+
+                    }
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
