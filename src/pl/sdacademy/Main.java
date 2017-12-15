@@ -24,6 +24,7 @@ public class Main {
         CREATING_COMPANY,
         CREATING_ADMIN,
         DELETING_ADMIN,
+        CHANGE_COMPANY,
         CREATING_ACCOUNTANT,
         DELETING_ACCOUNTANT,
         EXIT,
@@ -150,6 +151,7 @@ public class Main {
                     System.out.println(" 6 - dodać konto ksiegowego");
                     System.out.println(" 7 - usunac konto ksiegoweo");
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
+                    System.out.println(" 9 - zmienić nazwe lub nip firmy");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -193,6 +195,10 @@ public class Main {
                         case 8:
                             AccountantController.listAccountant();
                             state = State.LOGGED_IN_AS_ADMIN;
+                            scanner.nextLine();
+                            break;
+                        case 9:
+                            state = State.CHANGE_COMPANY;
                             scanner.nextLine();
                             break;
                         case 0:
