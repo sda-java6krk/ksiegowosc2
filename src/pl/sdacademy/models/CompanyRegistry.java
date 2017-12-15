@@ -22,8 +22,23 @@ public class CompanyRegistry {
     public CompanyRegistry() {
         this.companies = new ArrayList<>();
 
-        this.companies.add(new Company("Ziutex sp. z o.o.", 1990));
-        this.companies.add(new Company("Krakbud s.j.", 1995));
+        this.companies.add(new Company("Ziutex sp. z o.o.", 1990, "nip ziutex"));
+        this.companies.add(new Company("Krakbud s.j.", 1995, "nip krakbud"));
+    }
+
+    public void remove(String nip) {
+        boolean removed = false;
+        for (int i = 0; i < companies.size(); i++) {
+            if (companies.get(i).getNip().equals(nip)) {
+                companies.remove(companies.get(i));
+                removed = true;
+            }
+
+        }
+        if (removed == false) {
+            System.out.println("Brak firmy o podanym nipie");
+        }
+
     }
 
 
