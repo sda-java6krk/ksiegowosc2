@@ -217,7 +217,9 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
-                    CompanyController.createCompany(name, yearFound);
+                    System.out.println("Podaj nip firmy ");
+                    String nip = scanner.nextLine();
+                    CompanyController.createCompany(nip,name, yearFound);
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
