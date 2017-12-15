@@ -3,10 +3,9 @@ package pl.sdacademy.models;
 import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
+import pl.sdacademy.exceptions.AccountantWrongLogin;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class AccountantRegistry {
@@ -27,15 +26,22 @@ public class AccountantRegistry {
         return instance;
     }
 
-    public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort {
+    public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort,AccountantWrongLogin {
+        if(accountant.getLogin().trim().length() < 1){
+            throw new AccountantWrongLogin("Nie moze byc pusty login! ");
+
+        }
         if (accountants.contains(accountant)) {
             throw new AccountantAlreadyExistException("podany login jest zajety");
         }
 
          else {
-            if (accountant.getPassword().length() < 3) {
+            if (accountant.getPassword().trim().length() < 3) {
                 throw new AccountantPasswordIsToShort("Podane haslo jest za krotkie, musi sie skladac z przynajmniej 3 znakow");
             } else {
+               String login = accountant.getLogin().split(" ")[0];
+               String password = accountant.getPassword();
+              accountant = new Accountant(login,password);
                 accountants.add(accountant);
             }
         }

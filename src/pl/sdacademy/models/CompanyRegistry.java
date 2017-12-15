@@ -32,7 +32,8 @@ public class CompanyRegistry {
     }
 
 
-    public void add(Company company) {
+        public void add(Company company) {
         this.companies.add(company);
     }
+
 }
