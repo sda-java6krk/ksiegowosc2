@@ -3,7 +3,9 @@ package pl.sdacademy;
 import pl.sdacademy.controllers.AccountantController;
 import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.controllers.CompanyController;
+import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
+import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AdminNotFoundException;
 import pl.sdacademy.models.*;
 
@@ -18,9 +20,10 @@ public class Main {
         LOGGED_IN_AS_ACCOUNTANT,
         LOGGED_IN_AS_ADMIN,
         CREATING_COMPANY,
+        CHANGE_COMPANY,
+        DELETING_COMPANY,
         CREATING_ADMIN,
         DELETING_ADMIN,
-        CHANGE_COMPANY,
         CREATING_ACCOUNTANT,
         DELETING_ACCOUNTANT,
         EXIT,
@@ -79,7 +82,7 @@ public class Main {
                         state = State.LOGGED_IN_AS_ACCOUNTANT;
 
                     } catch (AccountantNotFoundException e) {
-                        System.out.println("Zły login lub hasło");
+                        System.out.println(e.getMessage());
                         state = State.INIT;
                     }
                     break;
@@ -147,7 +150,8 @@ public class Main {
                     System.out.println(" 6 - dodać konto ksiegowego");
                     System.out.println(" 7 - usunac konto ksiegoweo");
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
-                    System.out.println(" 9 - zmienić nazwe lub nip firmy");
+                    System.out.println(" 9 - usunac firme");
+                    System.out.println(" 10 - zmienić nazwe lub nip firmy");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -194,6 +198,10 @@ public class Main {
                             scanner.nextLine();
                             break;
                         case 9:
+                            state = State.DELETING_COMPANY;
+                            scanner.nextLine();
+                            break;
+                        case 10:
                             state = State.CHANGE_COMPANY;
                             break;
                         case 0:
@@ -249,12 +257,28 @@ public class Main {
                     break;
                 }
 
+                case DELETING_COMPANY: {
+                    System.out.println("Podaj NIP firmy do usunięcia:");
+                    String nip = scanner.nextLine();
+
+                    CompanyController.removeCompany(nip);
+
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
+
                 case CREATING_ACCOUNTANT: {
                     System.out.println("Podaj login nowego ksiegowego:");
                     String login = scanner.nextLine();
                     System.out.println("Podaj haslo: ");
                     String password = scanner.nextLine();
-                    AccountantController.createAccountant(login, password);
+                    try {
+                        AccountantController.createAccountant(login,password);
+
+                    } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort e) {
+                        System.out.println(e.getMessage());
+
+                    }
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
