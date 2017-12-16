@@ -24,4 +24,16 @@ public class Company {
     public int getYearFound() {
         return yearFound;
     }
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setYearFound(int yearFound) {
+        this.yearFound = yearFound;
+    }
+
 }

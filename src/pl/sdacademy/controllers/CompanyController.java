@@ -13,15 +13,10 @@ import java.util.Scanner;
 public class CompanyController {
 
     public static void createCompany(String nip, String name, int yearFound) {
-
-
-            CompanyRegistry.getInstance().add(new Company(nip, name, yearFound));
-
-
+        CompanyRegistry.getInstance().add(new Company(nip, name, yearFound));
     }
 
     public static void listCompanies() {
         CompanyView.printCompanies(CompanyRegistry.getInstance().getCompanies());
-
     }
 }

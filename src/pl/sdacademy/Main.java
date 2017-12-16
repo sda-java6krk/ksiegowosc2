@@ -1,15 +1,11 @@
 package pl.sdacademy;
 
-import com.sun.org.apache.bcel.internal.generic.CASTORE;
 import pl.sdacademy.controllers.AccountantController;
 import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.controllers.CompanyController;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AdminNotFoundException;
-import pl.sdacademy.models.Accountant;
-import pl.sdacademy.models.AccountantRegistry;
-import pl.sdacademy.models.Admin;
-import pl.sdacademy.models.AdminRegistry;
+import pl.sdacademy.models.*;
 
 import java.util.Scanner;
 
@@ -199,7 +195,6 @@ public class Main {
                             break;
                         case 9:
                             state = State.CHANGE_COMPANY;
-                            scanner.nextLine();
                             break;
                         case 0:
                             state = State.EXIT;
@@ -225,7 +220,7 @@ public class Main {
 
                     System.out.println("Podaj nip firmy ");
                     String nip = scanner.nextLine();
-                    CompanyController.createCompany(nip,name, yearFound);
+                    CompanyController.createCompany(nip, name, yearFound);
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -259,7 +254,7 @@ public class Main {
                     String login = scanner.nextLine();
                     System.out.println("Podaj haslo: ");
                     String password = scanner.nextLine();
-                    AccountantController.createAccountant(login,password);
+                    AccountantController.createAccountant(login, password);
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
@@ -271,8 +266,30 @@ public class Main {
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
+
+                case CHANGE_COMPANY: {
+                    System.out.println("Co chcesz zmienic w firme ? ");
+                    System.out.println("1 -  chcesz zmienic NIP firmy ");
+                    System.out.println("2 -  chcesz zmienic nazwe firmy");
+
+                    switch (scanner.nextInt()) {
+                        case 1:
+                            CompanyRegistry.getInstance().uiForChangingNip();
+                            state = State.LOGGED_IN_AS_ADMIN;
+                            break;
+                        case 2:
+                            scanner.nextLine();
+                            System.out.println("Podaj  nip firmy: ");
+                            String nip = scanner.nextLine();
+                            System.out.println("Podaj nową nazwe firmy : ");
+                            String newName = scanner.nextLine();
+                            CompanyRegistry.getInstance().changeNameForCompany(nip,newName);
+                            state = State.LOGGED_IN_AS_ADMIN;
+                            break;
+                    }
+                }
             }
         }
-        // write your code here
     }
 }
+
