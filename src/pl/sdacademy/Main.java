@@ -292,9 +292,9 @@ public class Main {
                 }
 
                 case CHANGE_COMPANY: {
-                    System.out.println("Co chcesz zmienic w firme ? ");
-                    System.out.println("1 -  chcesz zmienic NIP firmy ");
-                    System.out.println("2 -  chcesz zmienic nazwe firmy");
+                    System.out.println("Co chcesz zmienic w firmie ? ");
+                    System.out.println("1 -   zmienic NIP firmy ");
+                    System.out.println("2 -   zmienic nazwe firmy ");
 
                     switch (scanner.nextInt()) {
                         case 1:
@@ -302,12 +302,7 @@ public class Main {
                             state = State.LOGGED_IN_AS_ADMIN;
                             break;
                         case 2:
-                            scanner.nextLine();
-                            System.out.println("Podaj  nip firmy: ");
-                            String nip = scanner.nextLine();
-                            System.out.println("Podaj nową nazwe firmy : ");
-                            String newName = scanner.nextLine();
-                            CompanyRegistry.getInstance().changeNameForCompany(nip,newName);
+                            CompanyRegistry.getInstance().uiForChangingName();
                             state = State.LOGGED_IN_AS_ADMIN;
                             break;
                     }

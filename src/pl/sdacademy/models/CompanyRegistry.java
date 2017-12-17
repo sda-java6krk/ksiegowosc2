@@ -53,14 +53,8 @@ public class CompanyRegistry {
         company.setNip(newNip);
     }
 
-    public void changeNameForCompany(String nip, String newName) {
-        for (Company company : companies) {
-            if (company.getNip().equals(nip)) {
-                company.setName(newName);
-            } else {
-                System.out.println("Błedny NIP ");
-            }
-        }
+    public void changeNameForCompany(Company company, String newName) {
+        company.setName(newName);
     }
 
     public List<Company> getCompanies() {
@@ -74,7 +68,6 @@ public class CompanyRegistry {
 
     public void uiForChangingNip() {
         Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
         System.out.println("Podaj stary nip firmy: ");
         String oldNip = scanner.nextLine();
         Company found = findCompanyForNip(oldNip);
@@ -84,6 +77,19 @@ public class CompanyRegistry {
             System.out.println("Podaj nowy nip firmy : ");
             String newNip = scanner.nextLine();
             changeNipForCompany(found, newNip);
+        }
+    }
+    public  void  uiForChangingName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Podaj  nip firmy: ");
+        String nip = scanner.nextLine();
+        Company found = findCompanyForNip(nip);
+        if(found == null){
+            System.out.println("Nie znaleziono firmy z takim numerem NIP.");
+        }else {
+            System.out.println("Podaj nową nazwę firmy : ");
+            String newName = scanner.nextLine();
+            changeNameForCompany(found, newName);
         }
     }
 }
