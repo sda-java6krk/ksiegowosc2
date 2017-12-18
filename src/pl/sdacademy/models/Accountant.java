@@ -28,7 +28,7 @@ public class Accountant implements Serializable {
     }
 
     public String toString() {
-        return "Login: " + login; 
+        return "Login: " + login;
     }
     @Override
     public boolean equals(Object object) {

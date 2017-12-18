@@ -30,5 +30,8 @@ public class AccountantController {
     public static void saveAccountant() throws IOException, ClassNotFoundException {
         AccountantRegistry.saveAccountantToFile(AccountantRegistry.getInstance().getAccountants());
     }
+    public static void readAccountant() throws ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, IOException {
+        AccountantRegistry.readAccountantsFromFile(AccountantRegistry.getInstance().getAccountants());
+    }
 
 }

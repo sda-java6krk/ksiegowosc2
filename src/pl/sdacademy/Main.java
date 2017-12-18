@@ -8,17 +8,11 @@ import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AdminNotFoundException;
 import pl.sdacademy.models.*;
+import pl.sdacademy.views.AccountantView;
 
 
-import java.io.*;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 public class Main {
 
@@ -39,7 +33,7 @@ public class Main {
 
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException {
         State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
@@ -51,7 +45,7 @@ public class Main {
         while (state != State.EXIT) {
             switch (state) {
                 case INIT: {
-                    AccountantRegistry.readAccountants();
+                    AccountantController.readAccountant();
                     System.out.println("Dzień dobry, co chcesz zrobić?");
                     System.out.println(" 1 - zalogować się jako accountant");
                     System.out.println(" 2 - zalogować się jako admin");
@@ -198,6 +192,7 @@ public class Main {
                         case 6:
                             state = State.CREATING_ACCOUNTANT;
                             scanner.nextLine();
+                            AccountantController.saveAccountant();
                             break;
 
                         case 7:
@@ -207,6 +202,7 @@ public class Main {
 
                         case 8:
                             AccountantController.listAccountant();
+                            //AccountantView.printAccountant(AccountantRegistry.readAccountantsFromFile());
                             //AccountantRegistry.showAccounutants();
                             state = State.LOGGED_IN_AS_ADMIN;
                             scanner.nextLine();
@@ -240,9 +236,17 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
-                    System.out.println("Podaj nip firmy ");
-                    String nip = scanner.nextLine();
-                    CompanyController.createCompany(nip, name, yearFound);
+                    boolean isAccurate = false;
+
+                    while (!isAccurate) {
+                        System.out.println("Podaj nip: ");
+                        String nip = scanner.nextLine();
+                        if (CompanyRegistry.getInstance().validateNIP(nip) == true) {
+                            CompanyController.createCompany(nip, name, yearFound);
+                            isAccurate = true;
+                        }
+
+                    }
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -287,8 +291,7 @@ public class Main {
                     System.out.println("Podaj haslo: ");
                     String password = scanner.nextLine();
                     try {
-                        AccountantController.createAccountant(login,password);
-                                            AccountantController.saveAccountant();
+                        AccountantController.createAccountant(login, password);
 
                     } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort e) {
                         System.out.println(e.getMessage());
@@ -324,6 +327,7 @@ public class Main {
                 }
             }
         }
+        // write your code here
     }
 }
 

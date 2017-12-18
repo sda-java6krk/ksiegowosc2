@@ -13,11 +13,11 @@ public class CompanyController {
         CompanyRegistry.getInstance().add(new Company(nip, name, yearFound));
     }
 
-    public static void listCompanies() {
-        CompanyView.printCompanies(CompanyRegistry.getInstance().getCompanies());
-    }
-
     public static void removeCompany(String nip) {
         CompanyRegistry.getInstance().remove(nip);
+    }
+
+    public static void listCompanies() {
+        CompanyView.printCompanies(CompanyRegistry.getInstance().getCompanies());
     }
 }

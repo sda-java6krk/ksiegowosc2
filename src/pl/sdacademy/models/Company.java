@@ -7,19 +7,14 @@ import java.util.Set;
  */
 public class Company {
     private String name;
-    private int yearFound;
     private String nip;
+    private int yearFound;
     private Set<Accountant> accountants;
 
-
-
-    public Company(String nip,String name, int yearFound) {
+    public Company(String nip, String name, int yearFound) {
         this.name = name;
         this.yearFound = yearFound;
         this.nip = nip;
-    }
-    public String getNip() {
-        return nip ;
     }
 
     public String getName() {
@@ -29,6 +24,7 @@ public class Company {
     public int getYearFound() {
         return yearFound;
     }
+
     public void setNip(String nip) {
         this.nip = nip;
     }
@@ -41,4 +37,7 @@ public class Company {
         this.yearFound = yearFound;
     }
 
+    public String getNip() {
+        return nip;
+    }
 }

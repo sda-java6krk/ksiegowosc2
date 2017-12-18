@@ -53,6 +53,7 @@ public class CompanyRegistry {
         company.setNip(newNip);
     }
 
+
     public void changeNameForCompany(Company company, String newName) {
         company.setName(newName);
     }
@@ -65,6 +66,40 @@ public class CompanyRegistry {
     public void add(Company company) {
         this.companies.add(company);
     }
+
+    public boolean validateNIP(String nip) {
+        int nipResult = 0;
+
+        if (nip.length() != 10) {
+            return false;
+        }
+
+        for (int i = 0; i < nip.length() - 1; i++) {
+
+            if (i == 0 || i == 7) {
+                nipResult += (nip.charAt(i) - 48) * 6;
+            } else if (i == 1 || i == 6) {
+                nipResult += (nip.charAt(i) - 48) * 5;
+            } else if (i == 2 || i == 8) {
+                nipResult += (nip.charAt(i) - 48) * 7;
+            } else if (i == 3) {
+                nipResult += (nip.charAt(i) - 48) * 2;
+            } else if (i == 4) {
+                nipResult += (nip.charAt(i) - 48) * 3;
+            } else if (i == 5) {
+                nipResult += (nip.charAt(i) - 48) * 4;
+            }
+
+        }
+
+        if (nipResult % 11 != (nip.charAt(9) - 48)) {
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     public void uiForChangingNip() {
         Scanner scanner = new Scanner(System.in);
