@@ -1,23 +1,28 @@
 package pl.sdacademy.models;
 
+import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
+import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class AccountantRegistry extends Accountant implements Serializable {
     private static AccountantRegistry instance = null;
-    private ArrayList<Accountant> accountants;
+    private Set<Accountant> accountants;
 
 
 
 
     public AccountantRegistry() {
-        this.accountants = new ArrayList<>();
+        this.accountants = new HashSet<>();
 
-        //this.accountants.add(new Accountant("Tomasz", "123"));
-        //this.accountants.add(new Accountant("Marek", "123"));
+        //this.accountants.add(new Accountant("tomasz", "123"));
+        //this.accountants.add(new Accountant("marek", "123"));
     }
 
     public static AccountantRegistry getInstance() {
@@ -82,6 +87,30 @@ public class AccountantRegistry extends Accountant implements Serializable {
             }
         }*/
         if (removed == false) {
+    public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort {
+        if (accountants.contains(accountant)) {
+            throw new AccountantAlreadyExistException("podany login jest zajety");
+        }
+
+         else {
+            if (accountant.getPassword().length() < 3) {
+                throw new AccountantPasswordIsToShort("Podane haslo jest za krotkie, musi sie skladac z przynajmniej 3 znakow");
+            } else {
+                accountants.add(accountant);
+            }
+        }
+    }
+    public void removeAccountant(String login) {
+        boolean removed = false;
+
+      for(Accountant accountant : accountants) {
+          if (accountant.getLogin().equals(login)) {
+              accountants.remove(accountant);
+              removed = true;
+              break;
+          }
+      }
+        if (!removed) {
             System.out.println("Nie ma takiego ksiegowego");
         }
 
@@ -94,12 +123,14 @@ public class AccountantRegistry extends Accountant implements Serializable {
             }
         }
 
-        throw new AccountantNotFoundException();
+        throw new AccountantNotFoundException("Zły login lub hasło");
 
     }
 
-    public ArrayList<Accountant> getAccountants() {
+    public Set<Accountant> getAccountants() {
         return accountants;
     }
+
+}
 
 }

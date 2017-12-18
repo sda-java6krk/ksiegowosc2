@@ -1,5 +1,7 @@
 package pl.sdacademy.controllers;
 
+import pl.sdacademy.exceptions.AccountantAlreadyExistException;
+import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.models.Accountant;
 import pl.sdacademy.models.AccountantRegistry;
 import pl.sdacademy.views.AccountantView;
@@ -12,7 +14,7 @@ import java.util.List;
  */
 public class AccountantController {
 
-    public static void createAccountant(String login, String password){
+    public static void createAccountant(String login, String password) throws AccountantAlreadyExistException,AccountantPasswordIsToShort{
         AccountantRegistry.getInstance().addAccountant(new Accountant(login,password));
     }
 

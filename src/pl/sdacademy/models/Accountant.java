@@ -1,6 +1,7 @@
 package pl.sdacademy.models;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by marcin on 13.12.2017.
@@ -27,6 +28,18 @@ public class Accountant implements Serializable {
     }
 
     public String toString() {
-        return "Login: " + login;
+        return "Login: " + login; 
+    }
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Accountant that = (Accountant) object;
+        return Objects.equals(login.toLowerCase(), that.login.toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login.toLowerCase());
     }
 }
