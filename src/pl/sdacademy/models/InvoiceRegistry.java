@@ -5,16 +5,29 @@ import java.util.List;
 
 public class InvoiceRegistry {
 
+
     private static InvoiceRegistry instance = null;
+
+
+
     public static InvoiceRegistry getInstance() {
         if (instance == null) {
             instance = new InvoiceRegistry();
         }
         return instance;
     }
-    List <Invoice> invoices = new ArrayList<>();
 
-    public void addFacture(Invoice invoice){
 
+
+    public void addInvoiceForCompany(Invoice invoice, Company company) {
+
+        company.getInvoices().add(invoice);
     }
+
+    public void addInvoiceForClient(Invoice invoice, Client client) {
+
+        client.getInvoicesForClient().add(invoice);
+    }
+
+
 }

@@ -27,25 +27,26 @@ public class AccountantRegistry {
     }
 
     public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort,AccountantWrongLogin {
-        if(accountant.getLogin().trim().length() < 1){
-            throw new AccountantWrongLogin("Nie moze byc pusty login! ");
 
-        }
-        if (accountants.contains(accountant)) {
-            throw new AccountantAlreadyExistException("podany login jest zajety");
-        }
+            if (accountant.getLogin().trim().length() < 1) {
+                throw new AccountantWrongLogin("Nie moze byc pusty login! ");
 
-         else {
-            if (accountant.getPassword().trim().length() < 3) {
-                throw new AccountantPasswordIsToShort("Podane haslo jest za krotkie, musi sie skladac z przynajmniej 3 znakow");
+            }
+            if (accountants.contains(accountant)) {
+                throw new AccountantAlreadyExistException("podany login jest zajety");
             } else {
-               String login = accountant.getLogin().split(" ")[0];
-               String password = accountant.getPassword();
-              accountant = new Accountant(login,password);
-                accountants.add(accountant);
+                if (accountant.getPassword().trim().length() < 3) {
+                    throw new AccountantPasswordIsToShort("Podane haslo jest za krotkie, musi sie skladac z przynajmniej 3 znakow");
+                } else {
+                    String login = accountant.getLogin().split(" ")[ 0 ];
+                    String password = accountant.getPassword();
+                    accountant = new Accountant(login, password);
+                    accountants.add(accountant);
+
+                }
             }
         }
-    }
+
     public void removeAccountant(String login) {
         boolean removed = false;
 

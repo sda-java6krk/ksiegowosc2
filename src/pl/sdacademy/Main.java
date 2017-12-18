@@ -1,14 +1,8 @@
 package pl.sdacademy;
 
-import pl.sdacademy.controllers.AccountantController;
-import pl.sdacademy.controllers.AdminController;
-import pl.sdacademy.controllers.CompanyController;
-import pl.sdacademy.controllers.InvoiceController;
+import pl.sdacademy.controllers.*;
 import pl.sdacademy.exceptions.*;
-import pl.sdacademy.models.Accountant;
-import pl.sdacademy.models.AccountantRegistry;
-import pl.sdacademy.models.Admin;
-import pl.sdacademy.models.AdminRegistry;
+import pl.sdacademy.models.*;
 
 import java.util.Scanner;
 
@@ -26,6 +20,7 @@ public class Main {
         CREATING_ACCOUNTANT,
         DELETING_ACCOUNTANT,
         CREATING_INVOICE,
+        DELETING_COMPANY,
         EXIT,
     }
 
@@ -110,8 +105,7 @@ public class Main {
                 case LOGGED_IN_AS_ACCOUNTANT: {
                     System.out.println("Co chcesz zrobić?");
                     System.out.println(" 1 - wypisać wszystkie firmy");
-                    System.out.println(" 2 - dodać firmę");
-                    System.out.println(" 3 - dodac fakture");
+                    System.out.println(" 2 - dodac fakture");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -123,11 +117,6 @@ public class Main {
                             break;
 
                         case 2:
-                            state = State.CREATING_COMPANY;
-                            scanner.nextLine();
-                            break;
-
-                        case 3:
                             state = State.CREATING_INVOICE;
                             scanner.nextLine();
                             break;
@@ -155,6 +144,7 @@ public class Main {
                     System.out.println(" 6 - dodać konto ksiegowego");
                     System.out.println(" 7 - usunac konto ksiegoweo");
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
+                    System.out.println(" 9 - usunac firme");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -200,6 +190,11 @@ public class Main {
                             state = State.LOGGED_IN_AS_ADMIN;
                             scanner.nextLine();
                             break;
+                        case 9:
+                            state = State.DELETING_COMPANY;
+                            scanner.nextLine();
+                            break;
+
                         case 0:
                             state = State.EXIT;
                             scanner.nextLine();
@@ -222,7 +217,11 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
-                    CompanyController.createCompany(name, yearFound);
+
+                    System.out.println("Podaj nip firmy ");
+                    String nip = scanner.nextLine();
+                    CompanyController.createCompany(nip, name, yearFound);
+
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -251,6 +250,16 @@ public class Main {
                     break;
                 }
 
+                case DELETING_COMPANY: {
+                    System.out.println("Podaj NIP firmy do usunięcia:");
+                    String nip = scanner.nextLine();
+
+                    CompanyController.removeCompany(nip);
+
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
+
                 case CREATING_ACCOUNTANT: {
                     System.out.println("Podaj login nowego ksiegowego:");
                     String login = scanner.nextLine();
@@ -258,7 +267,7 @@ public class Main {
                     String password = scanner.nextLine();
 
                     try {
-                        AccountantController.createAccountant(login,password);
+                        AccountantController.createAccountant(login, password);
 
                     } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort | AccountantWrongLogin e) {
                         System.out.println(e.getMessage());
@@ -276,10 +285,12 @@ public class Main {
                     break;
                 }
 
-                case CREATING_INVOICE:{
+                case CREATING_INVOICE: {
+
                     boolean choice = false;
+
                     String type = "";
-                    while(!choice) {
+                    while (!choice) {
                         System.out.println("1 - Sprzedaz / 2 - Zakup");
                         int type1 = scanner.nextInt();
                         scanner.nextLine();
@@ -297,22 +308,22 @@ public class Main {
                     double howMuch = scanner.nextInt();
                     scanner.nextLine();
                     double vat = 0;
-                    while(choice) {
+                    while (choice) {
                         System.out.println("Wybierz stawke vat: 1 - 8% / 2 - 23%");
                         int whichVat = scanner.nextInt();
                         scanner.nextLine();
-                        if(whichVat == 1){
-                             vat = 0.08;
-                             choice = false;
-                        }else if(whichVat == 2){
-                             vat = 0.23;
-                             choice = false;
-                        }else{
+                        if (whichVat == 1) {
+                            vat = 0.08;
+                            choice = false;
+                        } else if (whichVat == 2) {
+                            vat = 0.23;
+                            choice = false;
+                        } else {
                             System.out.println("Zly wybor");
                         }
                     }
                     boolean paid = false;
-                    while(!choice) {
+                    while (!choice) {
                         System.out.println("1 - Zaplacono / 2- Niezaplacono");
                         int paidOrNot = scanner.nextInt();
                         scanner.nextLine();
@@ -320,13 +331,71 @@ public class Main {
                         if (paidOrNot == 1) {
                             paid = true;
                             choice = true;
-                        }else if(paidOrNot  == 2){
+                        } else if (paidOrNot == 2) {
                             choice = true;
-                        }else {
+                        } else {
                             System.out.println("Zly wybor");
                         }
                     }
-                    InvoiceController.createInvoice(type,howMuch,vat,paid);
+                    while (choice) {
+
+                        System.out.println("Czy chcesz zrobic fakture dla firmy - 1 czy dla klienta - 2");
+                        int choose = scanner.nextInt();
+                        scanner.nextLine();
+                        if (choose == 1) {
+                            System.out.println("Podaj nazwe firmy: ");
+                            String name = scanner.nextLine();
+                            boolean exist = false;
+                            CompanyRegistry companyRegistry = CompanyRegistry.getInstance();
+
+                           if (CompanyRegistry.getInstance().findCompanyByNip(name) != null ){
+                               Company company = CompanyRegistry.getInstance().findCompanyByNip(name);
+                               InvoiceController.createInvoiceForComapny(type, howMuch, vat, paid, company);
+
+                               InvoiceController.invoiceForCompanyList(company);
+
+                           }
+
+                            else{
+                                System.out.println("Nie ma takiej firmy");
+                            }
+                            choice = false;
+
+                        } else if (choose == 2) {
+                            System.out.println("Podaj swoj Nip");
+                            String nip = scanner.nextLine();
+                            if(ClientRegistry.getInstance().findClientByNip(nip) == null){
+                                System.out.println("Podaj swoje imie");
+                                String name = scanner.nextLine();
+                                System.out.println("Podaj swoje nazwisko");
+                                String surname = scanner.nextLine();
+                                ClientController.createClient(name,surname,nip);
+                                Client client = ClientRegistry.getInstance().findClientByNip(nip);
+                                InvoiceController.createInvoiceForClient(type, howMuch, vat, paid, client );
+
+                            }
+                            else {
+                                boolean correctClient = false;
+                                while (!correctClient) {
+                                    System.out.println("Jesli to wlasciwy client wybierz 1 jesli nie wybierz 2 " + ClientRegistry.getInstance().findClientByNip(nip));
+                                    Client client = ClientRegistry.getInstance().findClientByNip(nip);
+                                    int correctOrNot = scanner.nextInt();
+                                    scanner.nextLine();
+                                    if (correctOrNot == 2) {
+                                        break;
+                                    } else if (correctOrNot == 1) {
+                                        InvoiceController.createInvoiceForClient(type, howMuch, vat, paid, client);
+                                        correctClient = true;
+
+                                    } else {
+                                        System.out.println("Zly wybor");
+                                    }
+                                }
+                            }
+                            choice = false;
+                        }
+                    }
+
                     state = State.LOGGED_IN_AS_ACCOUNTANT;
                     break;
                 }

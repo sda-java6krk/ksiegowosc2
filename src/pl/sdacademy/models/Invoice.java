@@ -5,24 +5,29 @@ package pl.sdacademy.models;
  */
 public class Invoice {
 
-   private String type;
-   private double netAmmount;
-   private double vat;
-   private boolean paid;
-   private static int idSale = 0;
-   private static int idBuy = 0;
-   private int invoiceId;
+    private String type;
+    private double netAmmount;
+    private double vat;
+    private boolean paid;
+    private static int idSale = 0;
+    private static int idBuy = 0;
+    private int invoiceIdSale;
+    private int invoiceIdBuy;
+
+
 
     public Invoice(String type, double netAmmount, double vat, boolean paid) {
         this.type = type;
         this.netAmmount = netAmmount;
         this.vat = vat;
         this.paid = paid;
-        if(type.equals("sprzedaz")){
-            invoiceId = idSale;
+        if (type.equals("Sprzedaz")) {
+
+            invoiceIdSale = idSale;
             idSale++;
-        }else if(type.equals("zakup")){
-            invoiceId = idBuy;
+        } else if (type.equals("Zakup")) {
+
+            invoiceIdBuy = idBuy;
             idBuy++;
         }
     }
@@ -43,4 +48,23 @@ public class Invoice {
         return paid;
     }
 
+    @Override
+    public String toString() {
+        if (type.equals("Zakup")) {
+            return "Invoice{" +
+                    "type='" + type + '\'' +
+                    ", netAmmount=" + netAmmount +
+                    ", vat=" + vat +
+                    ", paid=" + paid +
+                    ", invoiceId=" + invoiceIdBuy +
+                    '}';
+        }
+        return "Invoice{" +
+                "type='" + type + '\'' +
+                ", netAmmount=" + netAmmount +
+                ", vat=" + vat +
+                ", paid=" + paid +
+                ", invoiceId=" + invoiceIdSale +
+                '}';
+    }
 }
