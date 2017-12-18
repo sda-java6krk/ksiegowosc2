@@ -7,10 +7,7 @@ import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AdminNotFoundException;
-import pl.sdacademy.models.Accountant;
-import pl.sdacademy.models.AccountantRegistry;
-import pl.sdacademy.models.Admin;
-import pl.sdacademy.models.AdminRegistry;
+import pl.sdacademy.models.*;
 
 import java.util.Scanner;
 
@@ -225,11 +222,17 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
+                    boolean isAccurate = false;
 
-                    System.out.println("Podaj nip firmy ");
-                    String nip = scanner.nextLine();
-                    CompanyController.createCompany(nip,name, yearFound);
+                    while (!isAccurate) {
+                        System.out.println("Podaj nip: ");
+                        String nip = scanner.nextLine();
+                        if (CompanyRegistry.getInstance().validateNIP(nip) == true) {
+                            CompanyController.createCompany(nip, name, yearFound);
+                            isAccurate = true;
+                        }
 
+                    }
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -274,7 +277,7 @@ public class Main {
                     System.out.println("Podaj haslo: ");
                     String password = scanner.nextLine();
                     try {
-                        AccountantController.createAccountant(login,password);
+                        AccountantController.createAccountant(login, password);
 
                     } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort e) {
                         System.out.println(e.getMessage());
