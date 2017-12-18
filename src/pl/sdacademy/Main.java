@@ -11,7 +11,16 @@ import pl.sdacademy.models.AccountantRegistry;
 import pl.sdacademy.models.Admin;
 import pl.sdacademy.models.AdminRegistry;
 
+
+import java.io.*;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Main {
 
@@ -26,19 +35,23 @@ public class Main {
         DELETING_ADMIN,
         CREATING_ACCOUNTANT,
         DELETING_ACCOUNTANT,
-        EXIT,
+        EXIT,;
+
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
         Admin currentAdmin = null;
         Accountant currentAccountant = null;
 
+
+
         while (state != State.EXIT) {
             switch (state) {
                 case INIT: {
+                    AccountantRegistry.readAccountants();
                     System.out.println("Dzień dobry, co chcesz zrobić?");
                     System.out.println(" 1 - zalogować się jako accountant");
                     System.out.println(" 2 - zalogować się jako admin");
@@ -192,6 +205,7 @@ public class Main {
 
                         case 8:
                             AccountantController.listAccountant();
+                            //AccountantRegistry.showAccounutants();
                             state = State.LOGGED_IN_AS_ADMIN;
                             scanner.nextLine();
                             break;
@@ -251,7 +265,8 @@ public class Main {
                     String login = scanner.nextLine();
                     System.out.println("Podaj haslo: ");
                     String password = scanner.nextLine();
-                    AccountantController.createAccountant(login,password);
+                    AccountantController.createAccountant(login, password);
+                    AccountantController.saveAccountant();
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
@@ -265,6 +280,5 @@ public class Main {
                 }
             }
         }
-        // write your code here
     }
 }

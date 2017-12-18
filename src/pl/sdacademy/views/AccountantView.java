@@ -9,10 +9,11 @@ import java.util.List;
  */
 public class AccountantView {
 
-public  static void printAccountant(List<Accountant> accountantList){
+    public static void printAccountant(List<Accountant> accountantList) {
 
-    for(Accountant accountant : accountantList){
-        System.out.println("login: " + accountant.getLogin());
+        for (Accountant accountant : accountantList) {
+            System.out.println("login: " + accountant.getLogin());
+        }
     }
-}
+
 }
