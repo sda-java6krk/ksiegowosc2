@@ -1,8 +1,5 @@
 package pl.sdacademy.models;
 
-import pl.sdacademy.exceptions.AdminNotFoundException;
-import pl.sdacademy.exceptions.CompanyNotFoundException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +9,7 @@ import java.util.Scanner;
  */
 public class CompanyRegistry {
     private static CompanyRegistry instance = null;
+    private ArrayList<Company> companies;
 
     public static CompanyRegistry getInstance() {
         if (instance == null) {
@@ -20,10 +18,7 @@ public class CompanyRegistry {
         return instance;
     }
 
-
-    private ArrayList<Company> companies;
-
-    public CompanyRegistry() {
+    private CompanyRegistry() {
         this.companies = new ArrayList<>();
 
         this.companies.add(new Company("1236547896", "Ziutex sp. z o.o.", 1990));
@@ -45,17 +40,23 @@ public class CompanyRegistry {
 
     }
 
-    public boolean findCompanyForNip(String nip) {
-
+    public Company findCompanyForNip(String nip) {
         for (Company company : companies) {
             if (company.getNip().equals(nip)) {
-                return true;
+                return company;
             }
         }
-
-        return false;
+        return null;
     }
 
+    public void changeNipForCompany(Company company, String newNip) {
+        company.setNip(newNip);
+    }
+
+
+    public void changeNameForCompany(Company company, String newName) {
+        company.setName(newName);
+    }
 
     public List<Company> getCompanies() {
         return this.companies;
@@ -99,4 +100,31 @@ public class CompanyRegistry {
     }
 
 
+
+    public void uiForChangingNip() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Podaj stary nip firmy: ");
+        String oldNip = scanner.nextLine();
+        Company found = findCompanyForNip(oldNip);
+        if(found == null){
+            System.out.println("Nie znaleziono firmy z takim numerem NIP.");
+        }else {
+            System.out.println("Podaj nowy nip firmy : ");
+            String newNip = scanner.nextLine();
+            changeNipForCompany(found, newNip);
+        }
+    }
+    public  void  uiForChangingName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Podaj  nip firmy: ");
+        String nip = scanner.nextLine();
+        Company found = findCompanyForNip(nip);
+        if(found == null){
+            System.out.println("Nie znaleziono firmy z takim numerem NIP.");
+        }else {
+            System.out.println("Podaj nową nazwę firmy : ");
+            String newName = scanner.nextLine();
+            changeNameForCompany(found, newName);
+        }
+    }
 }
