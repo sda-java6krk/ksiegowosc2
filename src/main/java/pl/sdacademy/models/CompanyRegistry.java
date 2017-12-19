@@ -81,7 +81,7 @@ public class CompanyRegistry {
     }
 
 
-    public void add(Company company) {
+    public void add(Company company) throws  ValidateNip {
         this.companies.add(company);
     }
 
@@ -90,7 +90,7 @@ public class CompanyRegistry {
         int nipResult = 0;
 
         if (nip.length() != 10) {
-            return false;
+            throw new ValidateNip("Bledny nip");
         }
 
         for (int i = 0; i < nip.length() - 1; i++) {
