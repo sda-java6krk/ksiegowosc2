@@ -17,7 +17,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public AccountantRegistry() {
         this.accountants = new HashSet<>();
 //tutaj powinno byc wczytywanie ksiegowych
-      //2 this.accountants.add(new Accountant("tomasz", "123"));
+      // this.accountants.add(new Accountant("tomasz", "123"));
         //this.accountants.add(new Accountant("marek", "123"));
     }
 
@@ -31,7 +31,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
     public static void saveAccountantToFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException {
         ObjectOutputStream objectOutputStream =
-                new ObjectOutputStream(new FileOutputStream("myAcountantRegistry.bin"));
+                new ObjectOutputStream(new FileOutputStream("C:\\Users\\pawel\\Downloads\\wzorceprojektowe\\myAcountantRegistry.bin"));
 
         objectOutputStream.writeObject(accountants);
         objectOutputStream.close();
