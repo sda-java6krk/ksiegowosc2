@@ -22,7 +22,7 @@ public class CompanyController {
 
     }
 
-    public static void removeCompany(String nip) {
+    public static void removeCompany(String nip) throws CompanyNotFoundException {
         CompanyRegistry.getInstance().remove(nip);
     }
 

@@ -2,16 +2,18 @@ package pl.sdacademy.controllers;
 
 import pl.sdacademy.models.*;
 
+import java.math.BigDecimal;
+
 /**
  * Created by marcin on 13.12.2017.
  */
 public class InvoiceController {
 
-    public static void createInvoiceForComapny(String type, double netAmount, double vat, boolean paid, Company company){
+    public static void createInvoiceForComapny(String type, BigDecimal netAmount, double vat, boolean paid, Company company){
         InvoiceRegistry.getInstance().addInvoiceForCompany(new Invoice(type,netAmount,vat,paid),company);
     }
 
-    public static void createInvoiceForClient(String type, double netAmount, double vat, boolean paid, Client client){
+    public static void createInvoiceForClient(String type, BigDecimal netAmount, double vat, boolean paid, Client client){
         InvoiceRegistry.getInstance().addInvoiceForClient(new Invoice(type,netAmount,vat,paid), client);
     }
 

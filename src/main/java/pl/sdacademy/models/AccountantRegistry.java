@@ -31,7 +31,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
     public static void saveAccountantToFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException {
         ObjectOutputStream objectOutputStream =
-                new ObjectOutputStream(new FileOutputStream("C:\\Users\\pawel\\Downloads\\wzorceprojektowe\\myAcountantRegistry.bin"));
+                new ObjectOutputStream(new FileOutputStream("myAcountantRegistry.bin"));
 
         objectOutputStream.writeObject(accountants);
         objectOutputStream.close();
@@ -41,7 +41,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public static void readAccountantsFromFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, AccountantWrongLogin {
 
         ObjectInputStream objectInputStream =
-                new ObjectInputStream(new FileInputStream("C:\\Users\\pawel\\Downloads\\wzorceprojektowe\\myAcountantRegistry.bin"));
+                new ObjectInputStream(new FileInputStream("myAcountantRegistry.bin"));
 
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
 
@@ -86,7 +86,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
             }
         }
 
-    public void removeAccountant(String login) {
+    public void removeAccountant(String login) throws AccountantNotFoundException {
         boolean removed = false;
 
         for (Accountant accountant : accountants) {
@@ -97,7 +97,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
             }
         }
         if (!removed) {
-            System.out.println("Nie ma takiego ksiegowego"); //wyrzucic wyjatek nie moze byc sout ani skanery w modelach
+            throw new AccountantNotFoundException("Nie ma takiego ksiegowego"); //wyrzucic wyjatek nie moze byc sout ani skanery w modelach
         }
     }
 
