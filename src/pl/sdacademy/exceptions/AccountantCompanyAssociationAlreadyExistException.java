@@ -1,8 +1,8 @@
 package pl.sdacademy.exceptions;
 
-public class AccountantAlreadyExistException  extends Exception{
+public class AccountantCompanyAssociationAlreadyExistException extends Exception{
 
-    public AccountantAlreadyExistException(String message) {
+    public AccountantCompanyAssociationAlreadyExistException(String message) {
         super(message);
     }
 

@@ -1,12 +1,11 @@
 package pl.sdacademy;
 
+import pl.sdacademy.associations.AccountantCompanyAssociation;
+import pl.sdacademy.controllers.AccountantCompanyAssociationController;
 import pl.sdacademy.controllers.AccountantController;
 import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.controllers.CompanyController;
-import pl.sdacademy.exceptions.AccountantAlreadyExistException;
-import pl.sdacademy.exceptions.AccountantNotFoundException;
-import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
-import pl.sdacademy.exceptions.AdminNotFoundException;
+import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.Accountant;
 import pl.sdacademy.models.AccountantRegistry;
 import pl.sdacademy.models.Admin;
@@ -28,6 +27,7 @@ public class Main {
         CREATING_ACCOUNTANT,
         DELETING_ACCOUNTANT,
         DELETING_COMPANY,
+        CREATING_ACCOUNTANT_COMPANY_ASSOCIATION,
         EXIT,
     }
 
@@ -153,6 +153,7 @@ public class Main {
                     System.out.println(" 7 - usunac konto ksiegoweo");
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
                     System.out.println(" 9 - usunac firme");
+                    System.out.println(" 10 - przypisz ksiegowego do firmy");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -200,6 +201,11 @@ public class Main {
                             break;
                         case 9:
                             state = State.DELETING_COMPANY;
+                            scanner.nextLine();
+                            break;
+
+                        case 10:
+                            state = State.CREATING_ACCOUNTANT_COMPANY_ASSOCIATION;
                             scanner.nextLine();
                             break;
 
@@ -279,6 +285,21 @@ public class Main {
                     } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort e) {
                         System.out.println(e.getMessage());
 
+                    }
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
+
+                case CREATING_ACCOUNTANT_COMPANY_ASSOCIATION: {
+                    System.out.println("Podaj login ksiegowego:");
+                    String login = scanner.nextLine();
+                    System.out.println("Podaj nip firmy:");
+                    String nip = scanner.nextLine();
+
+                    try {
+                        AccountantCompanyAssociationController.createAccountantCompanyAssociation(login,nip);
+                    } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException e)  {
+                        System.out.println(e.getMessage());
                     }
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;

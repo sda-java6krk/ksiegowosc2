@@ -66,6 +66,17 @@ public class AccountantRegistry {
 
     }
 
+    public boolean findAccountantByLogin(String login) {
+
+        for (Accountant accountant : accountants) {
+            if (accountant.getLogin().equals(login)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Set<Accountant> getAccountants() {
         return accountants;
     }

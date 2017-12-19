@@ -22,4 +22,6 @@ public class AccountantController {
     public static void listAccountant(){
         AccountantView.printAccountant(AccountantRegistry.getInstance().getAccountants());
     }
+
+
 }
