@@ -4,7 +4,11 @@ import pl.sdacademy.controllers.*;
 import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.*;
 
+import java.io.IOException;
 import java.util.Scanner;
+import java.io.IOException;
+
+import static pl.sdacademy.Main.State.CREATING_INVOICE;
 
 public class Main {
 
@@ -15,6 +19,7 @@ public class Main {
         LOGGED_IN_AS_ACCOUNTANT,
         LOGGED_IN_AS_ADMIN,
         CREATING_COMPANY,
+        CHANGE_COMPANY,
         CREATING_ADMIN,
         DELETING_ADMIN,
         CREATING_ACCOUNTANT,
@@ -24,16 +29,23 @@ public class Main {
         EXIT,
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
         Admin currentAdmin = null;
         Accountant currentAccountant = null;
 
+
+
         while (state != State.EXIT) {
             switch (state) {
                 case INIT: {
+                    try {
+                        AccountantController.readAccountant();
+                    } catch (ClassNotFoundException | AccountantPasswordIsToShort | AccountantAlreadyExistException | IOException | AccountantWrongLogin e) {
+                       e.getMessage();
+                    }
                     System.out.println("Dzień dobry, co chcesz zrobić?");
                     System.out.println(" 1 - zalogować się jako accountant");
                     System.out.println(" 2 - zalogować się jako admin");
@@ -117,7 +129,7 @@ public class Main {
                             break;
 
                         case 2:
-                            state = State.CREATING_INVOICE;
+                            state = CREATING_INVOICE;
                             scanner.nextLine();
                             break;
                         case 0:
@@ -145,6 +157,7 @@ public class Main {
                     System.out.println(" 7 - usunac konto ksiegoweo");
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
                     System.out.println(" 9 - usunac firme");
+                    System.out.println(" 10 - zmienić nazwe lub nip firmy");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -178,6 +191,13 @@ public class Main {
                         case 6:
                             state = State.CREATING_ACCOUNTANT;
                             scanner.nextLine();
+                            try {
+                                AccountantController.saveAccountant();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
                             break;
 
                         case 7:
@@ -187,6 +207,8 @@ public class Main {
 
                         case 8:
                             AccountantController.listAccountant();
+                            //AccountantView.printAccountant(AccountantRegistry.readAccountantsFromFile());
+                            //AccountantRegistry.showAccounutants();
                             state = State.LOGGED_IN_AS_ADMIN;
                             scanner.nextLine();
                             break;
@@ -194,7 +216,9 @@ public class Main {
                             state = State.DELETING_COMPANY;
                             scanner.nextLine();
                             break;
-
+                        case 10:
+                            state = State.CHANGE_COMPANY;
+                            break;
                         case 0:
                             state = State.EXIT;
                             scanner.nextLine();
@@ -217,11 +241,17 @@ public class Main {
                     int yearFound = scanner.nextInt();
                     scanner.nextLine();
 
+                    boolean isAccurate = false;
 
-                    System.out.println("Podaj nip firmy ");
-                    String nip = scanner.nextLine();
-                    CompanyController.createCompany(nip, name, yearFound);
+                    while (!isAccurate) {
+                        System.out.println("Podaj nip: ");
+                        String nip = scanner.nextLine();
+                        if (CompanyRegistry.getInstance().validateNIP(nip)) {
+                            CompanyController.createCompany(nip, name, yearFound);
+                            isAccurate = true;
+                        }
 
+                    }
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -284,6 +314,26 @@ public class Main {
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
+
+                case CHANGE_COMPANY: {
+                    System.out.println("Co chcesz zmienic w firmie ? ");
+                    System.out.println("1 -   zmienic NIP firmy ");
+                    System.out.println("2 -   zmienic nazwe firmy ");
+
+                    switch (scanner.nextInt()) {
+                        case 1:
+                            CompanyRegistry.getInstance().uiForChangingNip();
+                            state = State.LOGGED_IN_AS_ADMIN;
+                            break;
+                        case 2:
+                            CompanyRegistry.getInstance().uiForChangingName();
+                            state = State.LOGGED_IN_AS_ADMIN;
+                            break;
+                    }
+                }
+
+
+        // write your code here
 
                 case CREATING_INVOICE: {
 

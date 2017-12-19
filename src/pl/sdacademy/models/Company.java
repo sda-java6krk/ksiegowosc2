@@ -8,7 +8,6 @@ import java.util.Set;
  * Created by marcin on 13.12.2017.
  */
 public class Company {
-
     private String name;
     private int yearFound;
     private String nip;
@@ -37,5 +36,23 @@ public class Company {
         return invoices;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setYearFound(int yearFound) {
+        this.yearFound = yearFound;
+    }
+
+    public void setNip(String nip) {
+        this.nip = nip; //tu dodac validacje nipu
+    }
+
+    public void setAccountants(Set<Accountant> accountants) {
+        this.accountants = accountants;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
+    }
 }
