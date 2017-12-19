@@ -1,28 +1,33 @@
 package pl.sdacademy.models;
 
+import pl.sdacademy.exceptions.AdminNotFoundException;
+import pl.sdacademy.exceptions.CompanyNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 /**
  * Created by marcin on 13.12.2017.
  */
 public class CompanyRegistry {
     private static CompanyRegistry instance = null;
-    private ArrayList<Company> companies;
 
     public static CompanyRegistry getInstance() {
-        if (instance == null) {
+        if(instance == null) {
             instance = new CompanyRegistry();
         }
         return instance;
     }
 
-    private CompanyRegistry() {
+
+    private ArrayList<Company> companies;
+    private List<Invoice> invoicesForCompany;
+
+    public CompanyRegistry() {
         this.companies = new ArrayList<>();
 
-        this.companies.add(new Company("1236547896", "Ziutex sp. z o.o.", 1990));
-        this.companies.add(new Company("5987643258", "Krakbud s.j.", 1995));
+        this.companies.add(new Company("1236547896" ,"Ziutex sp. z o.o.", 1990));
+        this.companies.add(new Company("5987643258","Krakbud s.j.", 1995));
     }
 
     public void remove(String nip) {
@@ -40,7 +45,8 @@ public class CompanyRegistry {
 
     }
 
-    public Company findCompanyForNip(String nip) {
+    public Company findCompanyByNip(String nip) {
+
         for (Company company : companies) {
             if (company.getNip().equals(nip)) {
                 return company;
@@ -63,9 +69,11 @@ public class CompanyRegistry {
     }
 
 
-    public void add(Company company) {
+        public void add(Company company) {
         this.companies.add(company);
     }
+
+
 
     public boolean validateNIP(String nip) {
         int nipResult = 0;
@@ -105,7 +113,7 @@ public class CompanyRegistry {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj stary nip firmy: ");
         String oldNip = scanner.nextLine();
-        Company found = findCompanyForNip(oldNip);
+        Company found = findCompanyByNip(oldNip);
         if(found == null){
             System.out.println("Nie znaleziono firmy z takim numerem NIP.");
         }else {
@@ -118,7 +126,7 @@ public class CompanyRegistry {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj  nip firmy: ");
         String nip = scanner.nextLine();
-        Company found = findCompanyForNip(nip);
+        Company found = findCompanyByNip(nip);
         if(found == null){
             System.out.println("Nie znaleziono firmy z takim numerem NIP.");
         }else {

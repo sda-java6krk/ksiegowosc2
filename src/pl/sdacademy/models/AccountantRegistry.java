@@ -3,6 +3,7 @@ package pl.sdacademy.models;
 import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
+import pl.sdacademy.exceptions.AccountantWrongLogin;
 
 import java.io.*;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
     public AccountantRegistry() {
         this.accountants = new HashSet<>();
-
+//tutaj powinno byc wczytywanie ksiegowych
       //2 this.accountants.add(new Accountant("tomasz", "123"));
         //this.accountants.add(new Accountant("marek", "123"));
     }
@@ -37,9 +38,10 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
     }
 
-    public static void readAccountantsFromFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException {
+    public static void readAccountantsFromFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, AccountantWrongLogin {
+
         ObjectInputStream objectInputStream =
-                new ObjectInputStream(new FileInputStream("myAcountantRegistry.bin"));
+                new ObjectInputStream(new FileInputStream("C:\\Users\\pawel\\Downloads\\wzorceprojektowe\\myAcountantRegistry.bin"));
 
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
 
@@ -61,18 +63,28 @@ public class AccountantRegistry extends Accountant implements Serializable {
         }
     }*/
 
-    public void addAccountant(Accountant accountant) throws
-            AccountantAlreadyExistException, AccountantPasswordIsToShort {
-        if (accountants.contains(accountant)) {
-            throw new AccountantAlreadyExistException("podany login jest zajety");
-        } else {
-            if (accountant.getPassword().length() < 3) {
-                throw new AccountantPasswordIsToShort("Podane haslo jest za krotkie, musi sie skladac z przynajmniej 3 znakow");
+
+
+    public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort,AccountantWrongLogin {
+
+            if (accountant.getLogin().trim().length() < 1) {
+                throw new AccountantWrongLogin("Nie moze byc pusty login! ");
+
+            }
+            if (accountants.contains(accountant)) {
+                throw new AccountantAlreadyExistException("podany login jest zajety");
             } else {
-                accountants.add(accountant);
+                if (accountant.getPassword().trim().length() < 3) {
+                    throw new AccountantPasswordIsToShort("Podane haslo jest za krotkie, musi sie skladac z przynajmniej 3 znakow");
+                } else {
+                    String login = accountant.getLogin().split(" ")[ 0 ];
+                    String password = accountant.getPassword();
+                    accountant = new Accountant(login, password);
+                    accountants.add(accountant);
+//tutaj powinno byc dodanie ksiegowego
+                }
             }
         }
-    }
 
     public void removeAccountant(String login) {
         boolean removed = false;
@@ -85,9 +97,8 @@ public class AccountantRegistry extends Accountant implements Serializable {
             }
         }
         if (!removed) {
-            System.out.println("Nie ma takiego ksiegowego");
+            System.out.println("Nie ma takiego ksiegowego"); //wyrzucic wyjatek nie moze byc sout ani skanery w modelach
         }
-
     }
 
     public Accountant findAccountant(String login, String password) throws AccountantNotFoundException {
@@ -105,5 +116,5 @@ public class AccountantRegistry extends Accountant implements Serializable {
         return accountants;
     }
 
-}
 
+}

@@ -1,5 +1,7 @@
 package pl.sdacademy.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -7,11 +9,11 @@ import java.util.Set;
  */
 public class Company {
     private String name;
-    private String nip;
     private int yearFound;
+    private String nip;
     private Set<Accountant> accountants;
-
-    public Company(String nip, String name, int yearFound) {
+    private List<Invoice> invoices = new ArrayList<>();
+    public Company(String nip,String name, int yearFound) {
         this.name = name;
         this.yearFound = yearFound;
         this.nip = nip;
@@ -25,8 +27,13 @@ public class Company {
         return yearFound;
     }
 
-    public void setNip(String nip) {
-        this.nip = nip;
+    public String getNip() {
+        return nip;
+    }
+
+
+    public List<Invoice> getInvoices() {
+        return invoices;
     }
 
     public void setName(String name) {
@@ -37,7 +44,15 @@ public class Company {
         this.yearFound = yearFound;
     }
 
-    public String getNip() {
-        return nip;
+    public void setNip(String nip) {
+        this.nip = nip; //tu dodac validacje nipu
+    }
+
+    public void setAccountants(Set<Accountant> accountants) {
+        this.accountants = accountants;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
     }
 }

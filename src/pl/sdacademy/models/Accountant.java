@@ -35,11 +35,11 @@ public class Accountant implements Serializable {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Accountant that = (Accountant) object;
-        return Objects.equals(login.toLowerCase(), that.login.toLowerCase());
+        return Objects.equals(login.toLowerCase().trim().split(" ")[0], that.login.toLowerCase().trim().split(" ")[0]);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login.toLowerCase());
+        return Objects.hash(login.toLowerCase().trim().split(" ")[0]);
     }
 }
