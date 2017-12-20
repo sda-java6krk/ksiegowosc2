@@ -459,27 +459,25 @@ public class Main {
                         int choose = scanner.nextInt();
                         scanner.nextLine();
                         if (choose == 1) {
-                            System.out.println("Podaj nazwe firmy: ");
-                            String name = scanner.nextLine();
+                            System.out.println("Podaj nip firmy: ");
+                            String nip = scanner.nextLine();
                             boolean exist = false;
                             CompanyRegistry companyRegistry = CompanyRegistry.getInstance();
 
                             try {
-                                if (CompanyRegistry.getInstance().findCompanyByNip(name) != null) {
-                                    Company company = CompanyRegistry.getInstance().findCompanyByNip(name);
+                                if (companyRegistry.findCompanyByNip(nip) != null) {
+                                    Company company = companyRegistry.findCompanyByNip(nip);
                                     InvoiceController.createInvoiceForComapny(type, howMuch, vat, paid, company);
 
                                     InvoiceController.invoiceForCompanyList(company);
 
-                                } else {
-                                    System.out.println("Nie ma takiej firmy");
                                 }
                             } catch (CompanyNotFoundException e) {
-                                e.printStackTrace();
+                                System.out.println(e.getMessage());
                             }
                             choice = false;
-
-                        } else if (choose == 2) {
+                        }
+                         else if (choose == 2) {
                             System.out.println("Podaj swoj Nip");
                             String nip = scanner.nextLine();
                             if (ClientRegistry.getInstance().findClientByNip(nip) == null) {
