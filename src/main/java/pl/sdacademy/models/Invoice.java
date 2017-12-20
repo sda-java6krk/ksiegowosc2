@@ -18,9 +18,9 @@ public class Invoice {
 
 
 
-    public Invoice(String type, BigDecimal netAmmount, double vat, boolean paid) {
+    public Invoice(String type, BigDecimal netAmount, double vat, boolean paid) {
         this.type = type;
-        this.netAmmount = netAmmount;
+        this.netAmmount = netAmount;
         this.vat = vat;
         this.paid = paid;
         if (type.equals("Sprzedaz")) {

@@ -32,7 +32,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public static void saveAccountantToFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException {
         ObjectOutputStream objectOutputStream =
 
-                new ObjectOutputStream(new FileOutputStream("C:\\Users\\pawel\\Downloads\\projekt grupowy3\\ksiegowosc2\\myAcountantRegistry.bin    "));
+                new ObjectOutputStream(new FileOutputStream("myAcountantRegistry.bin"));
 
 
         objectOutputStream.writeObject(accountants);
@@ -44,7 +44,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
         ObjectInputStream objectInputStream =
 
-                new ObjectInputStream(new FileInputStream("C:\\Users\\pawel\\Downloads\\projekt grupowy3\\ksiegowosc2\\myAcountantRegistry.bin"));
+                new ObjectInputStream(new FileInputStream("myAcountantRegistry.bin"));
 
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
 
