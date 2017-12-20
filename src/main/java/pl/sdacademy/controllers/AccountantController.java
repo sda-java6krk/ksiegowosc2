@@ -1,6 +1,7 @@
 package pl.sdacademy.controllers;
 
 import pl.sdacademy.exceptions.AccountantAlreadyExistException;
+import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AccountantWrongLogin;
 import pl.sdacademy.models.Accountant;
@@ -19,7 +20,7 @@ public class AccountantController {
         AccountantRegistry.getInstance().addAccountant(new Accountant(login,password));
     }
 
-    public static void removeAccountant(String login){
+    public static void removeAccountant(String login) throws AccountantNotFoundException {
 
         AccountantRegistry.getInstance().removeAccountant(login);
         }

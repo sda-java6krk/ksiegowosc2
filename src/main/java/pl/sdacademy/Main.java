@@ -6,10 +6,12 @@ import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Scanner;
 import java.io.IOException;
 
 import static pl.sdacademy.Main.State.CREATING_INVOICE;
+import static pl.sdacademy.controllers.AccountantController.saveAccountant;
 
 public class Main {
 
@@ -31,13 +33,12 @@ public class Main {
         EXIT,
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
         Admin currentAdmin = null;
         Accountant currentAccountant = null;
-
 
 
         while (state != State.EXIT) {
@@ -46,7 +47,7 @@ public class Main {
                     try {
                         AccountantController.readAccountant();
                     } catch (ClassNotFoundException | AccountantPasswordIsToShort | AccountantAlreadyExistException | IOException | AccountantWrongLogin e) {
-                       e.getMessage();
+                        e.getMessage();
                     }
                     System.out.println("Dzień dobry, co chcesz zrobić?");
                     System.out.println(" 1 - zalogować się jako accountant");
@@ -195,10 +196,8 @@ public class Main {
                             state = State.CREATING_ACCOUNTANT;
                             scanner.nextLine();
                             try {
-                                AccountantController.saveAccountant();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
+                                saveAccountant();
+                            } catch (IOException | ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
                             break;
@@ -228,6 +227,11 @@ public class Main {
                             break;
 
                         case 0:
+                            try {
+                                saveAccountant();
+                            } catch (IOException | ClassNotFoundException e) {
+                                e.getMessage();
+                            }
                             state = State.EXIT;
                             scanner.nextLine();
                             break;
@@ -254,9 +258,13 @@ public class Main {
                     while (!isAccurate) {
                         System.out.println("Podaj nip: ");
                         String nip = scanner.nextLine();
-                        if (CompanyRegistry.getInstance().validateNIP(nip)) {
-                            CompanyController.createCompany(nip, name, yearFound);
-                            isAccurate = true;
+                        try {
+                            if (CompanyRegistry.getInstance().validateNIP(nip)) {
+                                CompanyController.createCompany(nip, name, yearFound);
+                                isAccurate = true;
+                            }
+                        } catch (ValidateNip e) {
+                            System.out.println(e.getMessage());
                         }
 
                     }
@@ -292,7 +300,11 @@ public class Main {
                     System.out.println("Podaj NIP firmy do usunięcia:");
                     String nip = scanner.nextLine();
 
-                    CompanyController.removeCompany(nip);
+                    try {
+                        CompanyController.removeCompany(nip);
+                    } catch (CompanyNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
 
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
@@ -318,7 +330,11 @@ public class Main {
                 case DELETING_ACCOUNTANT: {
                     System.out.println("Podaj login ksiegowego do usuniecia: ");
                     String login = scanner.nextLine();
-                    AccountantController.removeAccountant(login);
+                    try {
+                        AccountantController.removeAccountant(login);
+                    } catch (AccountantNotFoundException e) {
+                        System.out.println(e.getMessage());
+                    }
                     state = State.LOGGED_IN_AS_ADMIN;
                     break;
                 }
@@ -345,11 +361,36 @@ public class Main {
 
                     switch (scanner.nextInt()) {
                         case 1:
-                            CompanyRegistry.getInstance().uiForChangingNip();
+                            scanner.nextLine();
+                            System.out.println("Podaj stary nip firmy");
+                            String oldNip = scanner.nextLine();
+
+                            try {
+                                Company company = CompanyRegistry.getInstance().findCompanyByNip(oldNip);
+                                System.out.println("Podaj nowy nip firmy");
+                                String newNip = scanner.nextLine();
+                                CompanyRegistry.getInstance().uiForChangingNip(company, newNip);
+
+                            } catch (CompanyNotFoundException | ValidateNip e) {
+                                System.out.println(e.getMessage());
+                            }
+
                             state = State.LOGGED_IN_AS_ADMIN;
                             break;
+
+
                         case 2:
-                            CompanyRegistry.getInstance().uiForChangingName();
+                            scanner.nextLine();
+                            System.out.println("Podaj nazwe firmy ktora chcesz zmienic");
+                            String name = scanner.nextLine();
+                            try {
+                                Company company = CompanyRegistry.getInstance().findCompanyByName(name);
+                                System.out.println("Podaj nowa nazwe firmy");
+                                String newName = scanner.nextLine();
+                                CompanyRegistry.getInstance().uiForChangingName(company, newName);
+                            } catch (CompanyNotFoundException e) {
+                                System.out.println(e.getMessage());
+                            }
                             state = State.LOGGED_IN_AS_ADMIN;
                             break;
 
@@ -358,7 +399,7 @@ public class Main {
                 }
 
 
-        // write your code here
+                // write your code here
 
                 case CREATING_INVOICE: {
 
@@ -380,7 +421,7 @@ public class Main {
                         }
                     }
                     System.out.println("Podaj kwote netto");
-                    double howMuch = scanner.nextInt();
+                    BigDecimal howMuch = BigDecimal.valueOf(scanner.nextInt());
                     scanner.nextLine();
                     double vat = 0;
                     while (choice) {
@@ -423,33 +464,34 @@ public class Main {
                             boolean exist = false;
                             CompanyRegistry companyRegistry = CompanyRegistry.getInstance();
 
-                           if (CompanyRegistry.getInstance().findCompanyByNip(name) != null ){
-                               Company company = CompanyRegistry.getInstance().findCompanyByNip(name);
-                               InvoiceController.createInvoiceForComapny(type, howMuch, vat, paid, company);
+                            try {
+                                if (CompanyRegistry.getInstance().findCompanyByNip(name) != null) {
+                                    Company company = CompanyRegistry.getInstance().findCompanyByNip(name);
+                                    InvoiceController.createInvoiceForComapny(type, howMuch, vat, paid, company);
 
-                               InvoiceController.invoiceForCompanyList(company);
+                                    InvoiceController.invoiceForCompanyList(company);
 
-                           }
-
-                            else{
-                                System.out.println("Nie ma takiej firmy");
+                                } else {
+                                    System.out.println("Nie ma takiej firmy");
+                                }
+                            } catch (CompanyNotFoundException e) {
+                                e.printStackTrace();
                             }
                             choice = false;
 
                         } else if (choose == 2) {
                             System.out.println("Podaj swoj Nip");
                             String nip = scanner.nextLine();
-                            if(ClientRegistry.getInstance().findClientByNip(nip) == null){
+                            if (ClientRegistry.getInstance().findClientByNip(nip) == null) {
                                 System.out.println("Podaj swoje imie");
                                 String name = scanner.nextLine();
                                 System.out.println("Podaj swoje nazwisko");
                                 String surname = scanner.nextLine();
-                                ClientController.createClient(name,surname,nip);
+                                ClientController.createClient(name, surname, nip);
                                 Client client = ClientRegistry.getInstance().findClientByNip(nip);
-                                InvoiceController.createInvoiceForClient(type, howMuch, vat, paid, client );
+                                InvoiceController.createInvoiceForClient(type, howMuch, vat, paid, client);
 
-                            }
-                            else {
+                            } else {
                                 boolean correctClient = false;
                                 while (!correctClient) {
                                     System.out.println("Jesli to wlasciwy client wybierz 1 jesli nie wybierz 2 " + ClientRegistry.getInstance().findClientByNip(nip));

@@ -1,12 +1,14 @@
 package pl.sdacademy.models;
 
+import java.math.BigDecimal;
+
 /**
  * Created by marcin on 13.12.2017.
  */
 public class Invoice {
 
     private String type;
-    private double netAmmount;
+    private BigDecimal netAmmount;
     private double vat;
     private boolean paid;
     private static int idSale = 0;
@@ -16,7 +18,7 @@ public class Invoice {
 
 
 
-    public Invoice(String type, double netAmmount, double vat, boolean paid) {
+    public Invoice(String type, BigDecimal netAmmount, double vat, boolean paid) {
         this.type = type;
         this.netAmmount = netAmmount;
         this.vat = vat;
@@ -36,7 +38,7 @@ public class Invoice {
         return type;
     }
 
-    public double getNetAmmount() {
+    public BigDecimal getNetAmmount() {
         return netAmmount;
     }
 
