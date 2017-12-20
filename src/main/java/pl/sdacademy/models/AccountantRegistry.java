@@ -17,6 +17,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public AccountantRegistry() {
         this.accountants = new HashSet<>();
 //tutaj powinno byc wczytywanie ksiegowych
+
       this.accountants.add(new Accountant("tomasz", "123"));
         this.accountants.add(new Accountant("marek", "123"));
     }
@@ -32,7 +33,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public static void saveAccountantToFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException {
         ObjectOutputStream objectOutputStream =
 
-                new ObjectOutputStream(new FileOutputStream("myAcountantRegistry.bin"));
+                new ObjectOutputStream(new FileOutputStream("src/main/resources/myAccountantRegistry.bin"));
 
 
         objectOutputStream.writeObject(accountants);
@@ -44,7 +45,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
         ObjectInputStream objectInputStream =
 
-                new ObjectInputStream(new FileInputStream("myAcountantRegistry.bin"));
+                new ObjectInputStream(new FileInputStream("src/main/resources/myAccountantRegistry.bin"));
 
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
 
@@ -84,6 +85,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
                     String password = accountant.getPassword();
                     accountant = new Accountant(login, password);
                     accountants.add(accountant);
+
 //tutaj powinno byc dodanie ksiegowego
                 }
             }
