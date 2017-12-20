@@ -1,5 +1,6 @@
 package pl.sdacademy;
 
+import pl.sdacademy.associations.*;
 import pl.sdacademy.controllers.*;
 import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.*;
@@ -28,6 +29,7 @@ public class Main {
         DELETING_ACCOUNTANT,
         CREATING_INVOICE,
         DELETING_COMPANY,
+        CREATING_ACCOUNTANT_COMPANY_ASSOCIATION,
         EXIT,
     }
 
@@ -159,6 +161,7 @@ public class Main {
                     System.out.println(" 8 - wypisac wszystkich ksiegowych");
                     System.out.println(" 9 - usunac firme");
                     System.out.println(" 10 - zmienić nazwe lub nip firmy");
+                    System.out.println(" 11 - przypisz ksiegowego do firmy");
                     System.out.println(" 0 - wyjść z programu");
 
                     switch (scanner.nextInt()) {
@@ -218,6 +221,11 @@ public class Main {
                         case 10:
                             state = State.CHANGE_COMPANY;
                             break;
+                        case 11:
+                            state = State.CREATING_ACCOUNTANT_COMPANY_ASSOCIATION;
+                            scanner.nextLine();
+                            break;
+
                         case 0:
                             try {
                                 saveAccountant();
@@ -331,6 +339,21 @@ public class Main {
                     break;
                 }
 
+                case CREATING_ACCOUNTANT_COMPANY_ASSOCIATION: {
+                    System.out.println("Podaj login ksiegowego:");
+                    String login = scanner.nextLine();
+                    System.out.println("Podaj nip firmy:");
+                    String nip = scanner.nextLine();
+
+                    try {
+                        AccountantCompanyAssociationController.createAccountantCompanyAssociation(login,nip);
+                    } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException e)  {
+                        System.out.println(e.getMessage());
+                    }
+                    state = State.LOGGED_IN_AS_ADMIN;
+                    break;
+                }
+
                 case CHANGE_COMPANY: {
                     System.out.println("Co chcesz zmienic w firmie ? ");
                     System.out.println("1 -   zmienic NIP firmy ");
@@ -370,6 +393,7 @@ public class Main {
                             }
                             state = State.LOGGED_IN_AS_ADMIN;
                             break;
+
                     }
                     break;
                 }

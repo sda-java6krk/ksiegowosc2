@@ -17,8 +17,8 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public AccountantRegistry() {
         this.accountants = new HashSet<>();
 //tutaj powinno byc wczytywanie ksiegowych
-      // this.accountants.add(new Accountant("tomasz", "123"));
-        //this.accountants.add(new Accountant("marek", "123"));
+      this.accountants.add(new Accountant("tomasz", "123"));
+        this.accountants.add(new Accountant("marek", "123"));
     }
 
     public static AccountantRegistry getInstance() {
@@ -31,7 +31,9 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
     public static void saveAccountantToFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException {
         ObjectOutputStream objectOutputStream =
+
                 new ObjectOutputStream(new FileOutputStream("myAcountantRegistry.bin"));
+
 
         objectOutputStream.writeObject(accountants);
         objectOutputStream.close();
@@ -41,6 +43,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public static void readAccountantsFromFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, AccountantWrongLogin {
 
         ObjectInputStream objectInputStream =
+
                 new ObjectInputStream(new FileInputStream("myAcountantRegistry.bin"));
 
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
@@ -116,5 +119,16 @@ public class AccountantRegistry extends Accountant implements Serializable {
         return accountants;
     }
 
+
+    public boolean findAccountantByLogin(String login) {
+
+        for (Accountant accountant : accountants) {
+            if (accountant.getLogin().equals(login)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }
