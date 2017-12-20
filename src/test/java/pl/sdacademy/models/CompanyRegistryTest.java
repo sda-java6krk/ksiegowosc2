@@ -2,6 +2,8 @@ package pl.sdacademy.models;
 
 import org.junit.Assert;
 import org.junit.Test;
+import pl.sdacademy.exceptions.CompanyNotFoundException;
+import pl.sdacademy.exceptions.ValidateNip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,18 @@ public class CompanyRegistryTest {
     @Test
     public void shouldFindCompanyForNip() {
         Company created = new Company("1234567890", "", 1);
-        CompanyRegistry.getInstance().add(created);
+        try {
+            CompanyRegistry.getInstance().add(created);
+        } catch (ValidateNip validateNip) {
+            validateNip.printStackTrace();
+        }
 
-        Company result = CompanyRegistry.getInstance().findCompanyByNip("1234567890");
+        Company result = null;
+        try {
+            result = CompanyRegistry.getInstance().findCompanyByNip("1234567890");
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Assert.assertEquals(created, result);
     }
@@ -22,9 +33,18 @@ public class CompanyRegistryTest {
     @Test
     public void shouldNotFindCompanyForMissingNip() {
         Company created = new Company("1234567890", "", 1);
-        CompanyRegistry.getInstance().add(created);
+        try {
+            CompanyRegistry.getInstance().add(created);
+        } catch (ValidateNip validateNip) {
+            validateNip.printStackTrace();
+        }
 
-        Company result = CompanyRegistry.getInstance().findCompanyByNip("00000000");
+        Company result = null;
+        try {
+            result = CompanyRegistry.getInstance().findCompanyByNip("00000000");
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Assert.assertNull(result);
     }
@@ -33,9 +53,18 @@ public class CompanyRegistryTest {
     public void shouldChangeNipForCompany() {
         Company create = new Company("1245789632", "", 1234);
         String newNip = "5649871236";
-        CompanyRegistry.getInstance().add(create);
+        try {
+            CompanyRegistry.getInstance().add(create);
+        } catch (ValidateNip validateNip) {
+            validateNip.printStackTrace();
+        }
         CompanyRegistry.getInstance().changeNipForCompany(create, newNip);
-        Company companyWithNewNip = CompanyRegistry.getInstance().findCompanyByNip(newNip);
+        Company companyWithNewNip = null;
+        try {
+            companyWithNewNip = CompanyRegistry.getInstance().findCompanyByNip(newNip);
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
         assertNotNull(companyWithNewNip);
     }
 
@@ -43,11 +72,20 @@ public class CompanyRegistryTest {
     public void shouldChangeNameForCompany() {
         Company create = new Company("1234567896", "AAA", 1234);
         String newName = "BBB";
-        CompanyRegistry.getInstance().add(create);
+        try {
+            CompanyRegistry.getInstance().add(create);
+        } catch (ValidateNip validateNip) {
+            validateNip.printStackTrace();
+        }
 
         CompanyRegistry.getInstance().changeNipForCompany(create, newName);
 
-        Company companyWithNewName = CompanyRegistry.getInstance().findCompanyByNip(newName);
+        Company companyWithNewName = null;
+        try {
+            companyWithNewName = CompanyRegistry.getInstance().findCompanyByNip(newName);
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
         assertNotNull(companyWithNewName);
     }
 
@@ -55,7 +93,11 @@ public class CompanyRegistryTest {
     public void shouldAddCompany() {
         Company create = new Company("1234567896", "AAA", 1236);
         List<Company> companies = new ArrayList<>();
-        CompanyRegistry.getInstance().add(create);
+        try {
+            CompanyRegistry.getInstance().add(create);
+        } catch (ValidateNip validateNip) {
+            validateNip.printStackTrace();
+        }
         for (Company company : companies) {
             if (company.getNip().equals(create.getNip())) {
                 assertNotNull(create);
@@ -69,8 +111,16 @@ public class CompanyRegistryTest {
     public void shouldRemoveCompanyForNip() {
         Company create = new Company("1234567896", "AAA", 1236);
         List<Company> companies = new ArrayList<>();
-        CompanyRegistry.getInstance().add(create);
-        CompanyRegistry.getInstance().remove(create.getNip());
+        try {
+            CompanyRegistry.getInstance().add(create);
+        } catch (ValidateNip validateNip) {
+            validateNip.printStackTrace();
+        }
+        try {
+            CompanyRegistry.getInstance().remove(create.getNip());
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
         for (Company company : companies) {
             if (company.getNip().equals(create.getNip())) {
                 assertNull(create);
