@@ -6,6 +6,7 @@ import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AccountantWrongLogin;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +50,8 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
 
+
+        getInstance().removeAllAccountants();
         for (Accountant a : list) {
             getInstance().addAccountant(a);
         }
@@ -68,6 +71,9 @@ public class AccountantRegistry extends Accountant implements Serializable {
     }*/
 
 
+    public void removeAllAccountants(){
+        accountants = new HashSet<>();
+    }
 
     public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort,AccountantWrongLogin {
 

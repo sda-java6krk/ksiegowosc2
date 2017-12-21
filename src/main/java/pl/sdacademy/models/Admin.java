@@ -1,9 +1,11 @@
 package pl.sdacademy.models;
 
+import java.io.Serializable;
+
 /**
  * Created by marcin on 13.12.2017.
  */
-public class Admin {
+public class Admin implements Serializable {
     private String login;
     private String password;
 
@@ -16,11 +18,18 @@ public class Admin {
         this.password = password;
     }
 
+    public Admin() {
+    }
+
     public String getLogin() {
         return login;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public String toString() {
+        return "Login: " + login;
     }
 }

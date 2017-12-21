@@ -12,7 +12,7 @@ public class AdminRegistryTest {
     @Test
     public void shouldAddAdmin() {
         Admin created = new Admin("Anna", "321");
-        AdminRegistry.getInstance().add(created);
+        AdminRegistry.getInstance().addAdmin(created);
 
         Admin result = null;
         try {

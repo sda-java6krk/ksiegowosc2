@@ -33,7 +33,7 @@ public class Main {
         EXIT,
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort {
         State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
@@ -43,6 +43,7 @@ public class Main {
         while (state != State.EXIT) {
             switch (state) {
                 case INIT: {
+                    //AccountantController.readAccountant();
                     state = printInit(scanner, state);
                     break;
                 }
@@ -116,12 +117,13 @@ public class Main {
 
     }
 
-    private static State printInit(Scanner scanner, State state) {
+    private static State printInit(Scanner scanner, State state) throws ClassNotFoundException, AccountantPasswordIsToShort, AccountantWrongLogin, AccountantAlreadyExistException, IOException {
         try {
             AccountantController.readAccountant();
         } catch (ClassNotFoundException | AccountantPasswordIsToShort | AccountantAlreadyExistException | IOException | AccountantWrongLogin e) {
             e.getMessage();
         }
+        AdminController.readAmin();
         System.out.println("Dzień dobry, co chcesz zrobić?");
         System.out.println(" 1 - zalogować się jako accountant");
         System.out.println(" 2 - zalogować się jako admin");
@@ -193,6 +195,7 @@ public class Main {
         System.out.println("Co chcesz zrobić?");
         System.out.println(" 1 - wypisać wszystkie firmy");
         System.out.println(" 2 - dodac fakture");
+        System.out.println(" 3 - menu");
         System.out.println(" 0 - wyjść z programu");
 
         switch (scanner.nextInt()) {
@@ -207,6 +210,12 @@ public class Main {
                 state = CREATING_INVOICE;
                 scanner.nextLine();
                 break;
+
+            case 3:
+                state = State.INIT;
+                scanner.nextLine();
+                break;
+
             case 0:
                 state = State.EXIT;
                 scanner.nextLine();
@@ -222,7 +231,7 @@ public class Main {
         return state;
     }
 
-    private static State printLoggedInAsAdmin(Scanner scanner, State state) {
+    private static State printLoggedInAsAdmin(Scanner scanner, State state) throws IOException, ClassNotFoundException {
 
         System.out.println("Co chcesz zrobić?");
         System.out.println(" 1 - wypisać wszystkie firmy");
@@ -236,6 +245,7 @@ public class Main {
         System.out.println(" 9 - usunac firme");
         System.out.println(" 10 - zmienić nazwe lub nip firmy");
         System.out.println(" 11 - przypisz ksiegowego do firmy");
+        System.out.println(" 12 - menu");
         System.out.println(" 0 - wyjść z programu");
 
         switch (scanner.nextInt()) {
@@ -259,18 +269,20 @@ public class Main {
             case 4:
                 state = State.CREATING_ADMIN;
                 scanner.nextLine();
+                AdminController.saveAdmin();
                 break;
 
             case 5:
                 state = State.DELETING_ADMIN;
                 scanner.nextLine();
+                AdminController.saveAdmin();
                 break;
 
             case 6:
                 state = State.CREATING_ACCOUNTANT;
                 scanner.nextLine();
                 try {
-                    saveAccountant();
+                    AccountantController.saveAccountant();
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -278,6 +290,13 @@ public class Main {
 
             case 7:
                 state = State.DELETING_ACCOUNTANT;
+                try {
+                    AccountantController.saveAccountant();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 scanner.nextLine();
                 break;
 
@@ -303,12 +322,19 @@ public class Main {
                 scanner.nextLine();
                 break;
 
+            case 12:
+                state = State.INIT;
+                scanner.nextLine();
+                AdminController.readAmin();
+                break;
+
             case 0:
                 try {
-                    saveAccountant();
+                    AccountantController.saveAccountant();
                 } catch (IOException | ClassNotFoundException e) {
                     e.getMessage();
                 }
+                AdminController.saveAdmin();
                 state = State.EXIT;
                 scanner.nextLine();
                 break;
@@ -350,7 +376,7 @@ public class Main {
         return State.LOGGED_IN_AS_ADMIN;
     }
 
-    private static State printCreatingAdmin(Scanner scanner) {
+    private static State printCreatingAdmin(Scanner scanner) throws IOException {
         System.out.println("Podaj login nowego admina:");
         String login = scanner.nextLine();
 
@@ -358,15 +384,17 @@ public class Main {
         String password = scanner.nextLine();
 
         AdminController.createAdmin(login, password);
+        AdminController.saveAdmin();
 
         return State.LOGGED_IN_AS_ADMIN;
     }
 
-    private static State printDeletingAdmin(Scanner scanner) {
+    private static State printDeletingAdmin(Scanner scanner) throws IOException {
         System.out.println("Podaj login admina do usunięcia:");
         String login = scanner.nextLine();
 
         AdminController.removeAdmin(login);
+        AdminController.saveAdmin();
 
         return State.LOGGED_IN_AS_ADMIN;
     }
@@ -384,7 +412,7 @@ public class Main {
         return State.LOGGED_IN_AS_ADMIN;
     }
 
-    private static State printCreatingAccountant(Scanner scanner) {
+    private static State printCreatingAccountant(Scanner scanner) throws IOException, ClassNotFoundException {
         System.out.println("Podaj login nowego ksiegowego:");
         String login = scanner.nextLine();
         System.out.println("Podaj haslo: ");
@@ -392,6 +420,7 @@ public class Main {
 
         try {
             AccountantController.createAccountant(login, password);
+            AccountantController.saveAccountant();
 
         } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort | AccountantWrongLogin e) {
             System.out.println(e.getMessage());
@@ -400,11 +429,12 @@ public class Main {
         return State.LOGGED_IN_AS_ADMIN;
     }
 
-    private static State printDeletingAccountant(Scanner scanner) {
+    private static State printDeletingAccountant(Scanner scanner) throws IOException, ClassNotFoundException {
         System.out.println("Podaj login ksiegowego do usuniecia: ");
         String login = scanner.nextLine();
         try {
             AccountantController.removeAccountant(login);
+            AccountantController.saveAccountant();
         } catch (AccountantNotFoundException e) {
             System.out.println(e.getMessage());
         }

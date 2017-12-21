@@ -2,15 +2,13 @@ package pl.sdacademy.models;
 
 import pl.sdacademy.exceptions.AdminNotFoundException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by marcin on 13.12.2017.
  */
-public class AdminRegistry {
+public class AdminRegistry extends Admin implements Serializable {
     private static AdminRegistry instance = null;
     private ArrayList<Admin> admins;
 
@@ -43,7 +41,7 @@ public class AdminRegistry {
         throw new AdminNotFoundException();
     }
 
-    public void add(Admin admin) {
+    public void addAdmin(Admin admin) {
         boolean exist = false;
 
         if (admin.getLogin().equals(null) || admin.getLogin().equals("") || admin.getLogin().contains(" ")) {
@@ -80,6 +78,31 @@ public class AdminRegistry {
             System.out.println("Brak admina o podanym loginie");
         }
 
+    }
+
+    public static void saveAdminToFile(ArrayList<Admin> admins) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("src/main/resources/myAdminRegistry.bin"));
+
+        objectOutputStream.writeObject(admins);
+        objectOutputStream.close();
+    }
+
+    public static void readAdminFromFile(ArrayList<Admin> admins) throws IOException, ClassNotFoundException {
+
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("src/main/resources/myAdminRegistry.bin"));
+
+        ArrayList<Admin> list = (ArrayList<Admin>) objectInputStream.readObject();
+
+        getInstance().removeAllAdmins();
+
+        for(Admin a : list) {
+            getInstance().addAdmin(a);
+        }
+        objectInputStream.close();
+    }
+
+    public void removeAllAdmins() {
+        admins = new ArrayList<>();
     }
 
 }
