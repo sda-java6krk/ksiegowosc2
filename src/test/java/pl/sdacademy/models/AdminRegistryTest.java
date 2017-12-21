@@ -31,7 +31,7 @@ public class AdminRegistryTest {
     @Test(expected = AdminNotFoundException.class)
     public void shouldRemoveAdmin() throws AdminNotFoundException {
         Admin created = new Admin("Anna", "321");
-        AdminRegistry.getInstance().add(created);
+        AdminRegistry.getInstance().addAdmin(created);
 
         AdminRegistry.getInstance().remove("Anna");
         AdminRegistry.getInstance().findAdmin("Anna", "321");
@@ -40,7 +40,7 @@ public class AdminRegistryTest {
     @Test
     public void shouldNotAddAdminBadLogin() {
         Admin created = new Admin("  ", "321");
-        AdminRegistry.getInstance().add(created);
+        AdminRegistry.getInstance().addAdmin(created);
 
         Admin result = null;
         try {
@@ -55,7 +55,7 @@ public class AdminRegistryTest {
     @Test
     public void shouldNotAddAdminBadPassword() {
         Admin created = new Admin("Anna", " 12");
-        AdminRegistry.getInstance().add(created);
+        AdminRegistry.getInstance().addAdmin(created);
 
         Admin result = null;
         try {
@@ -69,11 +69,11 @@ public class AdminRegistryTest {
     @Test
     public void shouldNotAddCopyAdmin() {
         Admin created = new Admin("Anna", "123");
-        AdminRegistry.getInstance().add(created);
+        AdminRegistry.getInstance().addAdmin(created);
 
         Admin result = null;
         try {
-         AdminRegistry.getInstance().add(created);
+         AdminRegistry.getInstance().addAdmin(created);
          AdminRegistry.getInstance().findAdmin("Anna", "123");
         } catch (AdminNotFoundException e) {
             e.printStackTrace();
