@@ -19,8 +19,8 @@ public class ClientRegistry {
 
     public ClientRegistry() {
         this.clients = new ArrayList<>();
-        this.clients.add(new Client("mietek","mrukol","123"));
-        this.clients.add(new Client("pawel","mrukol","123"));
+        this.clients.add(new Client("mietek","mrukol","5272525995"));
+        this.clients.add(new Client("pawel","mrukol","5272525995"));
 
     }
 

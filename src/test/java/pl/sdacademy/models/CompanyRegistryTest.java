@@ -12,92 +12,52 @@ import static org.junit.Assert.*;
 
 public class CompanyRegistryTest {
     @Test
-    public void shouldFindCompanyForNip() {
+    public void shouldFindCompanyForNip() throws ValidateNip, CompanyNotFoundException {
         Company created = new Company("1234567890", "", 1);
-        try {
-            CompanyRegistry.getInstance().add(created);
-        } catch (ValidateNip validateNip) {
-            validateNip.printStackTrace();
-        }
+        CompanyRegistry.getInstance().add(created);
 
-        Company result = null;
-        try {
-            result = CompanyRegistry.getInstance().findCompanyByNip("1234567890");
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
-        }
+        Company result = CompanyRegistry.getInstance().findCompanyByNip("1234567890");
 
         Assert.assertEquals(created, result);
     }
 
     @Test
-    public void shouldNotFindCompanyForMissingNip() {
+    public void shouldNotFindCompanyForMissingNip() throws ValidateNip, CompanyNotFoundException {
         Company created = new Company("1234567890", "", 1);
-        try {
-            CompanyRegistry.getInstance().add(created);
-        } catch (ValidateNip validateNip) {
-            validateNip.printStackTrace();
-        }
+        CompanyRegistry.getInstance().add(created);
 
-        Company result = null;
-        try {
-            result = CompanyRegistry.getInstance().findCompanyByNip("00000000");
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
-        }
+        Company result = CompanyRegistry.getInstance().findCompanyByNip("00000000");
 
         Assert.assertNull(result);
     }
 
     @Test
-    public void shouldChangeNipForCompany() {
+    public void shouldChangeNipForCompany() throws ValidateNip, CompanyNotFoundException {
         Company create = new Company("1245789632", "", 1234);
         String newNip = "5649871236";
-        try {
-            CompanyRegistry.getInstance().add(create);
-        } catch (ValidateNip validateNip) {
-            validateNip.printStackTrace();
-        }
+        CompanyRegistry.getInstance().add(create);
         CompanyRegistry.getInstance().changeNipForCompany(create, newNip);
-        Company companyWithNewNip = null;
-        try {
-            companyWithNewNip = CompanyRegistry.getInstance().findCompanyByNip(newNip);
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
-        }
+        Company companyWithNewNip = CompanyRegistry.getInstance().findCompanyByNip(newNip);
         assertNotNull(companyWithNewNip);
     }
 
     @Test
-    public void shouldChangeNameForCompany() {
-        Company create = new Company("1234567896", "AAA", 1234);
+    public void shouldChangeNameForCompany() throws ValidateNip, CompanyNotFoundException {
+        Company create = new Company("77322869821", "AAA", 2001);
         String newName = "BBB";
-        try {
-            CompanyRegistry.getInstance().add(create);
-        } catch (ValidateNip validateNip) {
-            validateNip.printStackTrace();
-        }
+        CompanyRegistry.getInstance().add(create);
 
         CompanyRegistry.getInstance().changeNipForCompany(create, newName);
 
-        Company companyWithNewName = null;
-        try {
-            companyWithNewName = CompanyRegistry.getInstance().findCompanyByNip(newName);
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
-        }
+        Company companyWithNewName = CompanyRegistry.getInstance().findCompanyByNip(newName);
         assertNotNull(companyWithNewName);
     }
 
     @Test
-    public void shouldAddCompany() {
-        Company create = new Company("1234567896", "AAA", 1236);
+    public void shouldAddCompany() throws ValidateNip {
+        Company create = new Company("77322869821", "AAA", 2000);
         List<Company> companies = new ArrayList<>();
-        try {
-            CompanyRegistry.getInstance().add(create);
-        } catch (ValidateNip validateNip) {
-            validateNip.printStackTrace();
-        }
+        CompanyRegistry.getInstance().add(create);
         for (Company company : companies) {
             if (company.getNip().equals(create.getNip())) {
                 assertNotNull(create);
@@ -106,21 +66,12 @@ public class CompanyRegistryTest {
             }
         }
     }
-
     @Test
-    public void shouldRemoveCompanyForNip() {
-        Company create = new Company("1234567896", "AAA", 1236);
+    public void shouldRemoveCompanyForNip() throws ValidateNip, CompanyNotFoundException {
+        Company create = new Company("77322869821", "AAA", 2002);
         List<Company> companies = new ArrayList<>();
-        try {
-            CompanyRegistry.getInstance().add(create);
-        } catch (ValidateNip validateNip) {
-            validateNip.printStackTrace();
-        }
-        try {
-            CompanyRegistry.getInstance().remove(create.getNip());
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
-        }
+        CompanyRegistry.getInstance().add(create);
+        CompanyRegistry.getInstance().remove(create.getNip());
         for (Company company : companies) {
             if (company.getNip().equals(create.getNip())) {
                 assertNull(create);
@@ -129,25 +80,24 @@ public class CompanyRegistryTest {
             }
         }
     }
-
     @Test
-    public void shouldValidateNipByLength() {
-        String create = "1234567896";
+    public void shouldValidateNipByLength(){
+        String create = "77322869821";
         int LengthCreate = create.length();
-        assertEquals(10, LengthCreate);
+        assertEquals(10,LengthCreate);
+    }
+    @Test
+    public void shouldValidateNipBySpice(){
+        String create = "77322869821";
+        int LengthCreate = create.length();
+        assertEquals(10,LengthCreate);
+    }
+    @Test
+    public void shouldValidateNipBy(){
+        String create = "77322869821";
+        int LengthCreate = create.length();
+        assertEquals(10,LengthCreate);
     }
 
-    @Test
-    public void shouldValidateNipBySpice() {
-        String create = "1234567896";
-        int LengthCreate = create.length();
-        assertEquals(10, LengthCreate);
-    }
 
-    @Test
-    public void shouldValidateNipBy() {
-        String create = "1234567896";
-        int LengthCreate = create.length();
-        assertEquals(10, LengthCreate);
-    }
 }

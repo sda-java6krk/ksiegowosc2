@@ -39,7 +39,6 @@ public class AdminRegistry {
                 return admin;
             }
         }
-
         throw new AdminNotFoundException();
     }
 
