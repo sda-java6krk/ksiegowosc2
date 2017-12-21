@@ -84,7 +84,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
                     String password = accountant.getPassword();
                     accountant = new Accountant(login, password);
                     accountants.add(accountant);
-//tutaj powinno byc dodanie ksiegowego
+                    //tutaj powinno byc dodanie ksiegowego
                 }
             }
         }
@@ -110,7 +110,6 @@ public class AccountantRegistry extends Accountant implements Serializable {
                 return accountant;
             }
         }
-
         throw new AccountantNotFoundException("Zły login lub hasło");
 
     }
