@@ -37,7 +37,6 @@ public class AdminRegistry extends Admin implements Serializable {
                 return admin;
             }
         }
-
         throw new AdminNotFoundException();
     }
 
