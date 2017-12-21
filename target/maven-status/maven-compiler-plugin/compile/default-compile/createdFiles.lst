@@ -21,6 +21,7 @@ pl\sdacademy\exceptions\CompanyNotFoundException.class
 pl\sdacademy\controllers\ClientController.class
 pl\sdacademy\Main$State.class
 pl\sdacademy\Main.class
+pl\sdacademy\exceptions\ValidateNip.class
 pl\sdacademy\views\AccountantView.class
 pl\sdacademy\models\ClientRegistry.class
 pl\sdacademy\models\Accountant.class
