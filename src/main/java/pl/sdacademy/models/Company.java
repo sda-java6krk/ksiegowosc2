@@ -19,6 +19,9 @@ public class Company {
         this.nip = nip;
     }
 
+    public Company() {
+    }
+
     public String getName() {
         return name;
     }

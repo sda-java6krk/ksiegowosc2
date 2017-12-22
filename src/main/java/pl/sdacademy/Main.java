@@ -1,37 +1,18 @@
 package pl.sdacademy;
 
-import pl.sdacademy.associations.*;
 import pl.sdacademy.controllers.*;
+import pl.sdacademy.enums.State;
 import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.*;
+import pl.sdacademy.userInterface.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Scanner;
-import java.io.IOException;
-
-import static pl.sdacademy.Main.State.CREATING_INVOICE;
-import static pl.sdacademy.controllers.AccountantController.saveAccountant;
 
 public class Main {
 
-    public enum State {
-        INIT,
-        LOGGING_IN_AS_ADMIN,
-        LOGGING_IN_AS_ACCOUNTANT,
-        LOGGED_IN_AS_ACCOUNTANT,
-        LOGGED_IN_AS_ADMIN,
-        CREATING_COMPANY,
-        CHANGE_COMPANY,
-        CREATING_ADMIN,
-        DELETING_ADMIN,
-        CREATING_ACCOUNTANT,
-        DELETING_ACCOUNTANT,
-        CREATING_INVOICE,
-        DELETING_COMPANY,
-        CREATING_ACCOUNTANT_COMPANY_ASSOCIATION,
-        EXIT,
-    }
+
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort {
         State state = State.INIT;
@@ -43,7 +24,6 @@ public class Main {
         while (state != State.EXIT) {
             switch (state) {
                 case INIT: {
-                    //AccountantController.readAccountant();
                     state = printInit(scanner, state);
                     break;
                 }
@@ -118,389 +98,81 @@ public class Main {
     }
 
     private static State printInit(Scanner scanner, State state) throws ClassNotFoundException, AccountantPasswordIsToShort, AccountantWrongLogin, AccountantAlreadyExistException, IOException {
-        try {
-            AccountantController.readAccountant();
-        } catch (ClassNotFoundException | AccountantPasswordIsToShort | AccountantAlreadyExistException | IOException | AccountantWrongLogin e) {
-            e.getMessage();
-        }
-        AdminController.readAmin();
-        System.out.println("Dzień dobry, co chcesz zrobić?");
-        System.out.println(" 1 - zalogować się jako accountant");
-        System.out.println(" 2 - zalogować się jako admin");
-        System.out.println(" 0 - wyjść z programu");
-
-        switch (scanner.nextInt()) {
-            case 1:
-                state = State.LOGGING_IN_AS_ACCOUNTANT;
-                scanner.nextLine();
-                break;
-
-            case 2:
-                state = State.LOGGING_IN_AS_ADMIN;
-                scanner.nextLine();
-                break;
-
-            case 0:
-                state = State.EXIT;
-                scanner.nextLine();
-                break;
-
-            default:
-                System.out.println("Zła odpowiedź");
-                state = State.INIT;
-                scanner.nextLine();
-                break;
-        }
-        return state;
+        return UserInterfaceMenu.getStateMenu(scanner);
     }
 
     private static State printLoggingInAsAccountant(Scanner scanner, Accountant currentAccountant) {
-        System.out.println("Podaj login:");
-        String login = scanner.nextLine();
-
-        System.out.println("Podaj hasło:");
-        String password = scanner.nextLine();
-
-        try {
-            currentAccountant = AccountantRegistry.getInstance().findAccountant(login, password);
-            System.out.println("Dzień dobry " + currentAccountant.getLogin());
-            return State.LOGGED_IN_AS_ACCOUNTANT;
-
-        } catch (AccountantNotFoundException e) {
-            System.out.println(e.getMessage());
-            return State.INIT;
-        }
+        return UserInterfaceLoggingInAsAccountant.getStateLoggingInAsAccountant(scanner);
     }
 
     private static State printLoggingInAsAdmin(Scanner scanner, Admin currentAdmin) {
-        System.out.println("Podaj login:");
-        String login = scanner.nextLine();
-
-        System.out.println("Podaj hasło:");
-        String password = scanner.nextLine();
-
-        try {
-            currentAdmin = AdminRegistry.getInstance().findAdmin(login, password);
-            System.out.println("Dzień dobry " + currentAdmin.getLogin());
-            return State.LOGGED_IN_AS_ADMIN;
-
-        } catch (AdminNotFoundException e) {
-            System.out.println("Zły login lub hasło");
-            return State.INIT;
-        }
+        return UserInterfaceLoggingInAsAdmin.getStateLoggingInAsAdmin(scanner);
     }
+
+
 
     private static State printLoggedInAsAccountant(Scanner scanner, State state) {
 
-        System.out.println("Co chcesz zrobić?");
-        System.out.println(" 1 - wypisać wszystkie firmy");
-        System.out.println(" 2 - dodac fakture");
-        System.out.println(" 3 - menu");
-        System.out.println(" 0 - wyjść z programu");
-
-        switch (scanner.nextInt()) {
-
-            case 1:
-                CompanyController.listCompanies();
-                state = State.LOGGED_IN_AS_ACCOUNTANT;
-                scanner.nextLine();
-                break;
-
-            case 2:
-                state = CREATING_INVOICE;
-                scanner.nextLine();
-                break;
-
-            case 3:
-                state = State.INIT;
-                scanner.nextLine();
-                break;
-
-            case 0:
-                state = State.EXIT;
-                scanner.nextLine();
-                break;
-
-            default:
-                System.out.println("Zła odpowiedź");
-                state = State.INIT;
-                scanner.nextLine();
-                break;
-        }
-
-        return state;
+        return UserInterfaceLoggedInAsAccountant.getStateLoggedInAsAccountant(scanner);
     }
+
+
 
     private static State printLoggedInAsAdmin(Scanner scanner, State state) throws IOException, ClassNotFoundException {
 
-        System.out.println("Co chcesz zrobić?");
-        System.out.println(" 1 - wypisać wszystkie firmy");
-        System.out.println(" 2 - dodać firmę");
-        System.out.println(" 3 - wypisać wszystkich adminów");
-        System.out.println(" 4 - dodać admina");
-        System.out.println(" 5 - usunąć admina");
-        System.out.println(" 6 - dodać konto ksiegowego");
-        System.out.println(" 7 - usunac konto ksiegoweo");
-        System.out.println(" 8 - wypisac wszystkich ksiegowych");
-        System.out.println(" 9 - usunac firme");
-        System.out.println(" 10 - zmienić nazwe lub nip firmy");
-        System.out.println(" 11 - przypisz ksiegowego do firmy");
-        System.out.println(" 12 - menu");
-        System.out.println(" 0 - wyjść z programu");
-
-        switch (scanner.nextInt()) {
-            case 1:
-                CompanyController.listCompanies();
-                state = State.LOGGED_IN_AS_ADMIN;
-                scanner.nextLine();
-                break;
-
-            case 2:
-                state = State.CREATING_COMPANY;
-                scanner.nextLine();
-                break;
-
-            case 3:
-                AdminController.listAdmins();
-                state = State.LOGGED_IN_AS_ADMIN;
-                scanner.nextLine();
-                break;
-
-            case 4:
-                state = State.CREATING_ADMIN;
-                scanner.nextLine();
-                AdminController.saveAdmin();
-                break;
-
-            case 5:
-                state = State.DELETING_ADMIN;
-                scanner.nextLine();
-                AdminController.saveAdmin();
-                break;
-
-            case 6:
-                state = State.CREATING_ACCOUNTANT;
-                scanner.nextLine();
-                try {
-                    AccountantController.saveAccountant();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case 7:
-                state = State.DELETING_ACCOUNTANT;
-                try {
-                    AccountantController.saveAccountant();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                scanner.nextLine();
-                break;
-
-            case 8:
-                AccountantController.listAccountant();
-                //AccountantView.printAccountant(AccountantRegistry.readAccountantsFromFile());
-                //AccountantRegistry.showAccounutants();
-                state = State.LOGGED_IN_AS_ADMIN;
-                scanner.nextLine();
-                break;
-
-            case 9:
-                state = State.DELETING_COMPANY;
-                scanner.nextLine();
-                break;
-
-            case 10:
-                state = State.CHANGE_COMPANY;
-                break;
-
-            case 11:
-                state = State.CREATING_ACCOUNTANT_COMPANY_ASSOCIATION;
-                scanner.nextLine();
-                break;
-
-            case 12:
-                state = State.INIT;
-                scanner.nextLine();
-                AdminController.readAmin();
-                break;
-
-            case 0:
-                try {
-                    AccountantController.saveAccountant();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.getMessage();
-                }
-                AdminController.saveAdmin();
-                state = State.EXIT;
-                scanner.nextLine();
-                break;
-
-            default:
-                System.out.println("Zła odpowiedź");
-                state = State.INIT;
-                scanner.nextLine();
-                break;
-        }
-
-        return state;
+        return UserInterfaceLoggedInAsAdmin.getStateLoggedInAsAdmin(scanner);
     }
+
+
 
     private static State printCreatingCompany(Scanner scanner) {
-        System.out.println("Podaj nazwę nowej firmy:");
-        String name = scanner.nextLine();
-
-        System.out.println("Podaj rok założenia nowej firmy:");
-        int yearFound = scanner.nextInt();
-        scanner.nextLine();
-
-        boolean isAccurate = false;
-
-        while (!isAccurate) {
-            System.out.println("Podaj nip: ");
-            String nip = scanner.nextLine();
-            try {
-                if (CompanyRegistry.getInstance().validateNIP(nip)) {
-                    CompanyController.createCompany(nip, name, yearFound);
-                    isAccurate = true;
-                }
-            } catch (ValidateNip e) {
-                System.out.println(e.getMessage());
-            }
-
-        }
-
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceCreatingCompany.getStateCreatingCompany(scanner);
     }
+
+
 
     private static State printCreatingAdmin(Scanner scanner) throws IOException {
-        System.out.println("Podaj login nowego admina:");
-        String login = scanner.nextLine();
-
-        System.out.println("Podaj haslo nowego admina:");
-        String password = scanner.nextLine();
-
-        AdminController.createAdmin(login, password);
-        AdminController.saveAdmin();
-
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceCreatingAdmin.getStateCreatingAdmin(scanner);
     }
+
+
 
     private static State printDeletingAdmin(Scanner scanner) throws IOException {
-        System.out.println("Podaj login admina do usunięcia:");
-        String login = scanner.nextLine();
-
-        AdminController.removeAdmin(login);
-        AdminController.saveAdmin();
-
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceDeletingAdmin.getStateDeletingAdmin(scanner);
     }
+
+
 
     private static State printDeletingCompany(Scanner scanner) {
-        System.out.println("Podaj NIP firmy do usunięcia:");
-        String nip = scanner.nextLine();
-
-        try {
-            CompanyController.removeCompany(nip);
-        } catch (CompanyNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceDeletingCompany.getStateDeletingCompany(scanner);
     }
+
+
 
     private static State printCreatingAccountant(Scanner scanner) throws IOException, ClassNotFoundException {
-        System.out.println("Podaj login nowego ksiegowego:");
-        String login = scanner.nextLine();
-        System.out.println("Podaj haslo: ");
-        String password = scanner.nextLine();
-
-        try {
-            AccountantController.createAccountant(login, password);
-            AccountantController.saveAccountant();
-
-        } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort | AccountantWrongLogin e) {
-            System.out.println(e.getMessage());
-
-        }
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceCreatingAccountant.getStateCreatingAccountant(scanner);
     }
+
+
 
     private static State printDeletingAccountant(Scanner scanner) throws IOException, ClassNotFoundException {
-        System.out.println("Podaj login ksiegowego do usuniecia: ");
-        String login = scanner.nextLine();
-        try {
-            AccountantController.removeAccountant(login);
-            AccountantController.saveAccountant();
-        } catch (AccountantNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceDeletingAccountant.getStateDeletingAccountant(scanner);
     }
+
+
 
     private static State printCreatingAccountantCompanyAssociation(Scanner scanner) {
-        System.out.println("Podaj login ksiegowego:");
-        String login = scanner.nextLine();
-        System.out.println("Podaj nip firmy:");
-        String nip = scanner.nextLine();
-
-        try {
-            AccountantCompanyAssociationController.createAccountantCompanyAssociation(login, nip);
-        } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        return State.LOGGED_IN_AS_ADMIN;
+        return UserInterfaceCreatingAccountantCompanyAssociation.getStateCreatingAccountantCompanyAssociation(scanner);
 
     }
+
+
 
     private static State printChangeCompany(Scanner scanner, State state) {
-        System.out.println("Co chcesz zmienic w firmie ? ");
-        System.out.println("1 -   zmienic NIP firmy ");
-        System.out.println("2 -   zmienic nazwe firmy ");
-
-        switch (scanner.nextInt()) {
-            case 1:
-                scanner.nextLine();
-                System.out.println("Podaj stary nip firmy");
-                String oldNip = scanner.nextLine();
-
-                try {
-                    Company company = CompanyRegistry.getInstance().findCompanyByNip(oldNip);
-                    System.out.println("Podaj nowy nip firmy");
-                    String newNip = scanner.nextLine();
-                    CompanyRegistry.getInstance().uiForChangingNip(company, newNip);
-
-                } catch (CompanyNotFoundException | ValidateNip e) {
-                    System.out.println(e.getMessage());
-                }
-
-                state = State.LOGGED_IN_AS_ADMIN;
-                break;
-
-
-            case 2:
-                scanner.nextLine();
-                System.out.println("Podaj nazwe firmy ktora chcesz zmienic");
-                String name = scanner.nextLine();
-                try {
-                    Company company = CompanyRegistry.getInstance().findCompanyByName(name);
-                    System.out.println("Podaj nowa nazwe firmy");
-                    String newName = scanner.nextLine();
-                    CompanyRegistry.getInstance().uiForChangingName(company, newName);
-                } catch (CompanyNotFoundException e) {
-                    System.out.println(e.getMessage());
-                }
-                state = State.LOGGED_IN_AS_ADMIN;
-                break;
-
-        }
-
-        return state;
+        return UserInterfaceChangeCompany.getStateChangeCompany(scanner, state);
     }
+
+
 
     private static State printCreatingInvoice(Scanner scanner) {
 

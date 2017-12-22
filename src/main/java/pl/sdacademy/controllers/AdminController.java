@@ -28,7 +28,7 @@ public class AdminController {
         AdminRegistry.saveAdminToFile(AdminRegistry.getInstance().getAdmins());
     }
 
-    public static void readAmin() throws IOException, ClassNotFoundException {
+    public static void readAdmin() throws IOException, ClassNotFoundException {
         AdminRegistry.readAdminFromFile(AdminRegistry.getInstance().getAdmins());
     }
 }

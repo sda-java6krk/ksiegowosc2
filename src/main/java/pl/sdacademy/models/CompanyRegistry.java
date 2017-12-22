@@ -4,6 +4,7 @@ import pl.sdacademy.exceptions.AdminNotFoundException;
 import pl.sdacademy.exceptions.CompanyNotFoundException;
 import pl.sdacademy.exceptions.ValidateNip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 /**
  * Created by marcin on 13.12.2017.
  */
-public class CompanyRegistry {
+public class CompanyRegistry extends Company implements Serializable {
     private static CompanyRegistry instance = null;
 
     public static CompanyRegistry getInstance() {
