@@ -2,7 +2,9 @@ package pl.sdacademy.models;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
@@ -11,6 +13,8 @@ import pl.sdacademy.exceptions.AccountantWrongLogin;
 import static org.junit.Assert.*;
 
 public class AccountantRegistryTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @After
     public void after() {
@@ -49,8 +53,9 @@ public class AccountantRegistryTest {
         assertNotNull(AccountantRegistry.getInstance().findAccountant("Anna", "321"));
     }
 
-    @Test(expected = AccountantWrongLogin.class)
+    @Test
     public void shouldNotAddAccountantBadLogin() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+        thrown.expect(AccountantWrongLogin.class);
         Accountant accountant = new Accountant("   ", "321");
         AccountantRegistry.getInstance().addAccountant(accountant);
     }
