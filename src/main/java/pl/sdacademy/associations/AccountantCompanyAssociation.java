@@ -33,7 +33,7 @@ public class AccountantCompanyAssociation{
         int compareLogin = this.getAccountantLogin().toLowerCase().compareTo(a.getAccountantLogin().toLowerCase());
         int compareNip = this.getNip().toLowerCase().compareTo(a.getNip().toLowerCase());
 
-        if(compareLogin==0 && compareNip == 0){
+        if(compareLogin == 0 && compareNip == 0){
             return true;
         }else{
             return false;

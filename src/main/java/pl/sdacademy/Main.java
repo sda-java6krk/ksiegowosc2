@@ -562,14 +562,11 @@ public class Main {
                     if (CompanyRegistry.getInstance().findCompanyByNip(name) != null) {
                         Company company = CompanyRegistry.getInstance().findCompanyByNip(name);
                         InvoiceController.createInvoiceForComapny(type, howMuch, vat, paid, company);
-
                         InvoiceController.invoiceForCompanyList(company);
-
-                    } else {
-                        System.out.println("Nie ma takiej firmy");
                     }
+
                 } catch (CompanyNotFoundException e) {
-                    e.printStackTrace();
+                    e.getMessage();
                 }
                 choice = false;
 
