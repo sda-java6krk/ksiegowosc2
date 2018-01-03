@@ -14,9 +14,6 @@ public class AdminRegistry extends Admin implements Serializable {
 
     public AdminRegistry() {
         this.admins = new ArrayList<>();
-
-        this.admins.add(new Admin("adam", "123"));
-        this.admins.add(new Admin("ziutek", "456"));
     }
 
     public ArrayList<Admin> getAdmins() {
@@ -29,7 +26,6 @@ public class AdminRegistry extends Admin implements Serializable {
         }
         return instance;
     }
-
 
     public Admin findAdmin(String login, String password) throws AdminNotFoundException {
         for (Admin admin : admins) {
@@ -58,7 +54,7 @@ public class AdminRegistry extends Admin implements Serializable {
                 exist = true;
             }
         }
-        if (exist == false) {
+        if (!exist) {
             this.admins.add(admin);
         }
 

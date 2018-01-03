@@ -34,8 +34,6 @@ public class Main {
         State state = State.INIT;
         Scanner scanner = new Scanner(System.in);
 
-        Admin currentAdmin = null;
-        Accountant currentAccountant = null;
 
         while (state != State.EXIT) {
             switch (state) {
@@ -46,12 +44,12 @@ public class Main {
                 }
 
                 case LOGGING_IN_AS_ACCOUNTANT: {
-                    state = printLoggingInAsAccountant(scanner, currentAccountant);
+                    state = printLoggingInAsAccountant(scanner, null);
                     break;
                 }
 
                 case LOGGING_IN_AS_ADMIN: {
-                    state = printLoggingInAsAdmin(scanner, currentAdmin);
+                    state = printLoggingInAsAdmin(scanner, null);
                     break;
                 }
 
@@ -121,6 +119,7 @@ public class Main {
             e.getMessage();
         }
         AdminController.readAmin();
+        CompanyController.readCompany();
         System.out.println("Dzień dobry, co chcesz zrobić?");
         System.out.println(" 1 - zalogować się jako accountant");
         System.out.println(" 2 - zalogować się jako admin");
@@ -255,6 +254,7 @@ public class Main {
             case 2:
                 state = State.CREATING_COMPANY;
                 scanner.nextLine();
+                CompanyController.saveCompanies();
                 break;
 
             case 3:
@@ -289,10 +289,8 @@ public class Main {
                 state = State.DELETING_ACCOUNTANT;
                 try {
                     AccountantController.saveAccountant();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.getMessage();
                 }
                 scanner.nextLine();
                 break;
@@ -308,10 +306,12 @@ public class Main {
             case 9:
                 state = State.DELETING_COMPANY;
                 scanner.nextLine();
+                CompanyController.saveCompanies();
                 break;
 
             case 10:
                 state = State.CHANGE_COMPANY;
+                CompanyController.saveCompanies();
                 break;
 
             case 11:
@@ -379,6 +379,7 @@ public class Main {
             try {
                 if (CompanyRegistry.getInstance().validateNIP(nip)) {
                     CompanyController.createCompany(nip, name, yearFound);
+                    CompanyController.saveCompanies();
                     isAccurate = true;
                 }
             } catch (ValidateNipException e) {
@@ -387,6 +388,8 @@ public class Main {
                 nip = scanner.nextLine();
 
 
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
@@ -416,12 +419,13 @@ public class Main {
         return State.LOGGED_IN_AS_ADMIN;
     }
 
-    private static State printDeletingCompany(Scanner scanner) {
+    private static State printDeletingCompany(Scanner scanner) throws IOException {
         System.out.println("Podaj NIP firmy do usunięcia:");
         String nip = scanner.nextLine();
 
         try {
             CompanyController.removeCompany(nip);
+            CompanyController.saveCompanies();
         } catch (CompanyNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -474,7 +478,7 @@ public class Main {
 
     }
 
-    private static State printChangeCompany(Scanner scanner, State state) {
+    private static State printChangeCompany(Scanner scanner, State state) throws IOException {
         System.out.println("Co chcesz zmienic w firmie ? ");
         System.out.println("1 -   zmienic NIP firmy ");
         System.out.println("2 -   zmienic nazwe firmy ");
@@ -490,6 +494,8 @@ public class Main {
                     System.out.println("Podaj nowy nip firmy");
                     String newNip = scanner.nextLine();
                     CompanyRegistry.getInstance().uiForChangingNip(company, newNip);
+                    CompanyController.saveCompanies();
+
 
                 } catch (CompanyNotFoundException | ValidateNipException e) {
                     System.out.println(e.getMessage());
@@ -508,6 +514,7 @@ public class Main {
                     System.out.println("Podaj nowa nazwe firmy");
                     String newName = scanner.nextLine();
                     CompanyRegistry.getInstance().uiForChangingName(company, newName);
+                    CompanyController.saveCompanies();
                 } catch (CompanyNotFoundException e) {
                     System.out.println(e.getMessage());
                 }

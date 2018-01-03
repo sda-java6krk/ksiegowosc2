@@ -4,13 +4,11 @@ import pl.sdacademy.exceptions.CompanyNotFoundException;
 import pl.sdacademy.exceptions.CompanyWrongYearFoundException;
 import pl.sdacademy.exceptions.ValidateNipException;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcin on 13.12.2017.
- */
-public class CompanyRegistry {
+public class CompanyRegistry extends Company implements Serializable{
     private static CompanyRegistry instance = null;
 
     public static CompanyRegistry getInstance() {
@@ -27,8 +25,6 @@ public class CompanyRegistry {
     public CompanyRegistry() {
         this.companies = new ArrayList<>();
 
-        this.companies.add(new Company("4835444141", "Ziutex sp. z o.o.", 1990));
-        this.companies.add(new Company("3592184997", "Krakbud s.j.", 1995));
     }
 
     public void remove(String nip) throws CompanyNotFoundException {
@@ -76,7 +72,7 @@ public class CompanyRegistry {
         company.setName(newName);
     }
 
-    public List<Company> getCompanies() {
+    public ArrayList<Company> getCompanies() {
         return this.companies;
     }
 
@@ -87,7 +83,7 @@ public class CompanyRegistry {
         throw new CompanyWrongYearFoundException("Zly rok zalozenia firmy");
     }
 
-    public void add(Company company) {
+    public void addCompany(Company company) throws IOException {
         this.companies.add(company);
     }
 
@@ -134,5 +130,30 @@ public class CompanyRegistry {
 
     public void uiForChangingName(Company company, String name) {
         changeNameForCompany(company, name);
+    }
+
+    public static void saveCompanyToFile(ArrayList<Company> companies) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("src/main/resources/myCompanyRegistry.bin"));
+
+        objectOutputStream.writeObject(companies);
+        objectOutputStream.close();
+    }
+
+    public static void readCompanyFromFile(ArrayList<Company> companies) throws IOException, ClassNotFoundException {
+
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("src/main/resources/myCompanyRegistry.bin"));
+
+        ArrayList<Company> list = (ArrayList<Company>) objectInputStream.readObject();
+
+        getInstance().removeAllCompanies();
+
+        for(Company a : list) {
+            getInstance().addCompany(a);
+        }
+        objectInputStream.close();
+    }
+
+    public void removeAllCompanies() {
+        companies = new ArrayList<>();
     }
 }

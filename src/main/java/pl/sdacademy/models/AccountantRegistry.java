@@ -18,8 +18,6 @@ public class AccountantRegistry extends Accountant implements Serializable {
     public AccountantRegistry() {
         this.accountants = new HashSet<>();
 //tutaj powinno byc wczytywanie ksiegowych
-      this.accountants.add(new Accountant("tomasz", "123"));
-        this.accountants.add(new Accountant("marek", "123"));
     }
 
     public static AccountantRegistry getInstance() {
