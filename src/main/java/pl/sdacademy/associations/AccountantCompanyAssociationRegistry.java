@@ -30,7 +30,7 @@ public class AccountantCompanyAssociationRegistry {
     }
 
     public void addAccountantCompanyAssociation(AccountantCompanyAssociation AccountantCompanyAssociation) throws AccountantCompanyAssociationAlreadyExistException, AccountantNotFoundException, CompanyNotFoundException {
-        if(!AccountantRegistry.getInstance().findAccountantByLogin(AccountantCompanyAssociation.getAccountantLogin())){
+        if(AccountantRegistry.getInstance().findAccountantByLogin(AccountantCompanyAssociation.getAccountantLogin()) == null){
             throw new AccountantNotFoundException("Ksiegowy o loginie " + AccountantCompanyAssociation.getAccountantLogin() + " nie istnieje");
         }
 

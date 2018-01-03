@@ -56,20 +56,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
         }
 
         objectInputStream.close();
-
-        /*for(Accountant acs : list){ WYPISYWANIE LISTY KSIĘGOWYCH
-            System.out.println(acs.login);
-            System.out.println(acs.password);
-        }*/
-
     }
-    /*public static void showAccounutants() {
-        for(Accountant acc : getInstance().accountants) {
-            System.out.println(acc.login);
-        }
-    }*/
-
-
     public void removeAllAccountants(){
         accountants = new HashSet<>();
     }
@@ -90,7 +77,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
                     String password = accountant.getPassword();
                     accountant = new Accountant(login, password);
                     accountants.add(accountant);
-                    //tutaj powinno byc dodanie ksiegowego
+                    //TODO tutaj powinno byc dodanie ksiegowego
                 }
             }
         }
@@ -106,7 +93,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
             }
         }
         if (!removed) {
-            throw new AccountantNotFoundException("Nie ma takiego ksiegowego"); //wyrzucic wyjatek nie moze byc sout ani skanery w modelach
+            throw new AccountantNotFoundException("Nie ma takiego ksiegowego");
         }
     }
 
@@ -125,15 +112,15 @@ public class AccountantRegistry extends Accountant implements Serializable {
     }
 
 
-    public boolean findAccountantByLogin(String login) {
+    public Accountant findAccountantByLogin(String login) throws AccountantNotFoundException {
 
         for (Accountant accountant : accountants) {
             if (accountant.getLogin().equals(login)) {
-                return true;
+                return accountant;
             }
         }
 
-        return false;
+        throw new AccountantNotFoundException("Nie ma takiego ksiegowego");
     }
 
 }

@@ -1,12 +1,11 @@
 package pl.sdacademy.models;
 
-import pl.sdacademy.exceptions.AdminNotFoundException;
 import pl.sdacademy.exceptions.CompanyNotFoundException;
-import pl.sdacademy.exceptions.ValidateNip;
+import pl.sdacademy.exceptions.CompanyWrongYearFoundException;
+import pl.sdacademy.exceptions.ValidateNipException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Created by marcin on 13.12.2017.
@@ -67,7 +66,8 @@ public class CompanyRegistry {
         throw new CompanyNotFoundException("Nie ma firmy o tej nazwie");
     }
 
-    public void changeNipForCompany(Company company, String newNip) {
+    public void changeNipForCompany(Company company, String newNip) throws ValidateNipException {
+        validateNIP(newNip);
         company.setNip(newNip);
     }
 
@@ -80,17 +80,23 @@ public class CompanyRegistry {
         return this.companies;
     }
 
+    public boolean searchIfCompanyYearOfFoundIsGood(int companyYear) throws CompanyWrongYearFoundException {
+       if(companyYear >= 1800 && companyYear <= 2018){
+           return true;
+            }
+        throw new CompanyWrongYearFoundException("Zly rok zalozenia firmy");
+    }
 
-    public void add(Company company) throws  ValidateNip {
+    public void add(Company company) {
         this.companies.add(company);
     }
 
 
-    public boolean validateNIP(String nip) throws ValidateNip {
+    public boolean validateNIP(String nip) throws ValidateNipException {
         int nipResult = 0;
 
         if (nip.length() != 10) {
-            throw new ValidateNip("Bledny nip");
+            throw new ValidateNipException("Bledny nip");
         }
 
         for (int i = 0; i < nip.length() - 1; i++) {
@@ -108,22 +114,21 @@ public class CompanyRegistry {
             } else if (i == 5) {
                 nipResult += (nip.charAt(i) - 48) * 4;
             }
-
         }
 
         if (nipResult % 11 != (nip.charAt(9) - 48)) {
-            throw new ValidateNip("Bledny nip");
+            throw new ValidateNipException("Bledny nip");
         }
 
         return true;
     }
 
 
-    public void uiForChangingNip(Company company, String nip) throws ValidateNip {
+    public void uiForChangingNip(Company company, String nip) throws ValidateNipException {
         if (validateNIP(nip)) {
             changeNipForCompany(company, nip);
         } else {
-            throw new ValidateNip("bledny nip");
+            throw new ValidateNipException("bledny nip");
         }
     }
 

@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class AccountantController {
 
+    private static final AccountantRegistry accountantRegistry = AccountantRegistry.getInstance();
+
     public static void createAccountant(String login, String password) throws AccountantAlreadyExistException, AccountantPasswordIsToShort, AccountantWrongLogin {
         AccountantRegistry.getInstance().addAccountant(new Accountant(login,password));
     }

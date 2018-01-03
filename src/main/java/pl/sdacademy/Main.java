@@ -1,6 +1,5 @@
 package pl.sdacademy;
 
-import pl.sdacademy.associations.*;
 import pl.sdacademy.controllers.*;
 import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.*;
@@ -8,10 +7,8 @@ import pl.sdacademy.models.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Scanner;
-import java.io.IOException;
 
 import static pl.sdacademy.Main.State.CREATING_INVOICE;
-import static pl.sdacademy.controllers.AccountantController.saveAccountant;
 
 public class Main {
 
@@ -356,26 +353,46 @@ public class Main {
         System.out.println("Podaj rok założenia nowej firmy:");
         int yearFound = scanner.nextInt();
         scanner.nextLine();
+        boolean goodYearFoun = false;
+        while (!goodYearFoun) {
+            try {
+                if (CompanyRegistry.getInstance().searchIfCompanyYearOfFoundIsGood(yearFound)) {
+                    goodYearFoun = true;
+                }
 
+            } catch (CompanyWrongYearFoundException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Podaj rok założenia nowej firmy:");
+                yearFound = scanner.nextInt();
+                scanner.nextLine();
+            }
+        }
         boolean isAccurate = false;
 
+        System.out.println("Podaj nip: ");
+
+        String nip = scanner.nextLine();
+
         while (!isAccurate) {
-            System.out.println("Podaj nip: ");
-            String nip = scanner.nextLine();
+
+
             try {
                 if (CompanyRegistry.getInstance().validateNIP(nip)) {
                     CompanyController.createCompany(nip, name, yearFound);
                     isAccurate = true;
                 }
-            } catch (ValidateNip e) {
+            } catch (ValidateNipException e) {
                 System.out.println(e.getMessage());
+                System.out.println("Podaj nip: ");
+                nip = scanner.nextLine();
+
+
             }
 
         }
-
         return State.LOGGED_IN_AS_ADMIN;
-    }
 
+    }
     private static State printCreatingAdmin(Scanner scanner) throws IOException {
         System.out.println("Podaj login nowego admina:");
         String login = scanner.nextLine();
@@ -474,7 +491,7 @@ public class Main {
                     String newNip = scanner.nextLine();
                     CompanyRegistry.getInstance().uiForChangingNip(company, newNip);
 
-                } catch (CompanyNotFoundException | ValidateNip e) {
+                } catch (CompanyNotFoundException | ValidateNipException e) {
                     System.out.println(e.getMessage());
                 }
 

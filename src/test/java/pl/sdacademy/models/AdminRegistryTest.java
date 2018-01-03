@@ -37,34 +37,18 @@ public class AdminRegistryTest {
         AdminRegistry.getInstance().findAdmin("Anna", "321");
     }
 
-    @Test
-    public void shouldNotAddAdminBadLogin() {
+    @Test(expected = AdminNotFoundException.class)
+    public void shouldNotAddAdminBadLogin() throws AdminNotFoundException {
         Admin created = new Admin("  ", "321");
         AdminRegistry.getInstance().addAdmin(created);
-
-        Admin result = null;
-        try {
-            result = AdminRegistry.getInstance().findAdmin("  ", "321");
-        } catch (AdminNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Assert.assertNotEquals(created, result);
+        Admin result = AdminRegistry.getInstance().findAdmin("  ", "321");
     }
 
-    @Test
-    public void shouldNotAddAdminBadPassword() {
+    @Test(expected = AdminNotFoundException.class)
+    public void shouldNotAddAdminBadPassword() throws AdminNotFoundException {
         Admin created = new Admin("Anna", " 12");
         AdminRegistry.getInstance().addAdmin(created);
-
-        Admin result = null;
-        try {
-            result = AdminRegistry.getInstance().findAdmin("Anna", " 12");
-        } catch (AdminNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Assert.assertNotEquals(created, result);
+        Admin result = AdminRegistry.getInstance().findAdmin("Anna", " 12");
     }
     @Test
     public void shouldNotAddCopyAdmin() {
