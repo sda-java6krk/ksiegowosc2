@@ -1,11 +1,10 @@
 package pl.sdacademy.associations;
 
-import pl.sdacademy.exceptions.AccountantCompanyAssociationAlreadyExistException;
-import pl.sdacademy.exceptions.AccountantNotFoundException;
-import pl.sdacademy.exceptions.CompanyNotFoundException;
+import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.AccountantRegistry;
 import pl.sdacademy.models.CompanyRegistry;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,9 +16,6 @@ public class AccountantCompanyAssociationRegistry {
 
     public AccountantCompanyAssociationRegistry() {
         this.AccountantCompanyAssociations = new HashSet<>();
-
-        this.AccountantCompanyAssociations.add(new AccountantCompanyAssociation("tomasz","3623981230"));
-        this.AccountantCompanyAssociations.add(new AccountantCompanyAssociation("marek", "7251801126"));
     }
 
     public static AccountantCompanyAssociationRegistry getInstance() {
@@ -29,7 +25,7 @@ public class AccountantCompanyAssociationRegistry {
         return instance;
     }
 
-    public void addAccountantCompanyAssociation(AccountantCompanyAssociation AccountantCompanyAssociation) throws AccountantCompanyAssociationAlreadyExistException, AccountantNotFoundException, CompanyNotFoundException {
+    public void addAccountantCompanyAssociation(AccountantCompanyAssociation AccountantCompanyAssociation) throws AccountantCompanyAssociationAlreadyExistException, AccountantNotFoundException, CompanyNotFoundException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantWrongLogin, AccountantAlreadyExistException, IOException {
         if(AccountantRegistry.getInstance().findAccountantByLogin(AccountantCompanyAssociation.getAccountantLogin()) == null){
             throw new AccountantNotFoundException("Ksiegowy o loginie " + AccountantCompanyAssociation.getAccountantLogin() + " nie istnieje");
         }

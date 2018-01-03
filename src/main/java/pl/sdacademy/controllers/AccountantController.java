@@ -18,13 +18,13 @@ public class AccountantController {
 
     private static final AccountantRegistry accountantRegistry = AccountantRegistry.getInstance();
 
-    public static void createAccountant(String login, String password) throws AccountantAlreadyExistException, AccountantPasswordIsToShort, AccountantWrongLogin {
-        AccountantRegistry.getInstance().addAccountant(new Accountant(login,password));
+    public static void createAccountant(String login, String password) throws AccountantAlreadyExistException, AccountantPasswordIsToShort, AccountantWrongLogin, IOException, ClassNotFoundException {
+       accountantRegistry.addAccountant(new Accountant(login,password));
     }
 
-    public static void removeAccountant(String login) throws AccountantNotFoundException {
+    public static void removeAccountant(String login) throws AccountantNotFoundException, IOException, ClassNotFoundException {
 
-        AccountantRegistry.getInstance().removeAccountant(login);
+        accountantRegistry.removeAccountant(login);
         }
 
     public static void listAccountant(){
@@ -32,10 +32,10 @@ public class AccountantController {
     }
 
     public static void saveAccountant() throws IOException, ClassNotFoundException {
-        AccountantRegistry.saveAccountantToFile(AccountantRegistry.getInstance().getAccountants());
+        AccountantRegistry.saveAccountantToFile(accountantRegistry.getAccountants());
     }
     public static void readAccountant() throws ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, IOException, AccountantWrongLogin {
-        AccountantRegistry.readAccountantsFromFile(AccountantRegistry.getInstance().getAccountants());
+        AccountantRegistry.readAccountantsFromFile(accountantRegistry.getAccountants());
     }
 
 }

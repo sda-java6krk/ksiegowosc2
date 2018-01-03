@@ -8,6 +8,8 @@ import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AccountantWrongLogin;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 public class AccountantRegistryTest {
@@ -23,7 +25,7 @@ public class AccountantRegistryTest {
     }
 
     @Test
-    public void shouldAddAccountant() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort {
+    public void shouldAddAccountant() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, IOException, ClassNotFoundException {
         //given
         Accountant accountant = new Accountant("Anna", "321");
         //when
@@ -33,7 +35,7 @@ public class AccountantRegistryTest {
     }
 
     @Test
-    public void shouldRemoveAccountant() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+    public void shouldRemoveAccountant() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException, IOException, ClassNotFoundException {
         Accountant accountant = new Accountant("Anna", "321");
         //when
         AccountantRegistry.getInstance().addAccountant(accountant);
@@ -43,27 +45,27 @@ public class AccountantRegistryTest {
     }
 
     @Test
-    public void shouldFindAccountant() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+    public void shouldFindAccountant() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException, IOException, ClassNotFoundException {
         Accountant accountant = new Accountant("Anna", "321");
         AccountantRegistry.getInstance().addAccountant(accountant);
         assertNotNull(AccountantRegistry.getInstance().findAccountant("Anna", "321"));
     }
 
     @Test(expected = AccountantWrongLogin.class)
-    public void shouldNotAddAccountantBadLogin() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+    public void shouldNotAddAccountantBadLogin() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException, IOException, ClassNotFoundException {
         Accountant accountant = new Accountant("   ", "321");
         AccountantRegistry.getInstance().addAccountant(accountant);
     }
 
     @Test(expected = AccountantAlreadyExistException.class)
-    public void shouldNotAddAccountantWhenExist() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+    public void shouldNotAddAccountantWhenExist() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException, IOException, ClassNotFoundException {
         Accountant accountant = new Accountant("Anna", "123");
         AccountantRegistry.getInstance().addAccountant(accountant);
         AccountantRegistry.getInstance().addAccountant(accountant);
     }
 
     @Test(expected = AccountantPasswordIsToShort.class)
-    public void shouldNotAddAccountantPasswordToShort() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+    public void shouldNotAddAccountantPasswordToShort() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException, IOException, ClassNotFoundException {
         Accountant accountant = new Accountant("Anna", " 32");
         AccountantRegistry.getInstance().addAccountant(accountant);
     }

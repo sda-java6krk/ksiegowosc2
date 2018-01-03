@@ -19,7 +19,7 @@ public class CompanyController {
         CompanyRegistry.getInstance().addCompany(new Company(nip, name, yearFound));
     }
 
-    public static void removeCompany(String nip) throws CompanyNotFoundException {
+    public static void removeCompany(String nip) throws CompanyNotFoundException, IOException {
         CompanyRegistry.getInstance().remove(nip);
     }
 

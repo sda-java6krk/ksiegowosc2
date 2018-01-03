@@ -38,7 +38,6 @@ public class Main {
         while (state != State.EXIT) {
             switch (state) {
                 case INIT: {
-                    //AccountantController.readAccountant();
                     state = printInit(scanner, state);
                     break;
                 }
@@ -118,7 +117,7 @@ public class Main {
         } catch (ClassNotFoundException | AccountantPasswordIsToShort | AccountantAlreadyExistException | IOException | AccountantWrongLogin e) {
             e.getMessage();
         }
-        AdminController.readAmin();
+        AdminController.readAdmin();
         CompanyController.readCompany();
         System.out.println("Dzień dobry, co chcesz zrobić?");
         System.out.println(" 1 - zalogować się jako accountant");
@@ -254,7 +253,6 @@ public class Main {
             case 2:
                 state = State.CREATING_COMPANY;
                 scanner.nextLine();
-                CompanyController.saveCompanies();
                 break;
 
             case 3:
@@ -266,39 +264,25 @@ public class Main {
             case 4:
                 state = State.CREATING_ADMIN;
                 scanner.nextLine();
-                AdminController.saveAdmin();
                 break;
 
             case 5:
                 state = State.DELETING_ADMIN;
                 scanner.nextLine();
-                AdminController.saveAdmin();
                 break;
 
             case 6:
                 state = State.CREATING_ACCOUNTANT;
                 scanner.nextLine();
-                try {
-                    AccountantController.saveAccountant();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
                 break;
 
             case 7:
                 state = State.DELETING_ACCOUNTANT;
-                try {
-                    AccountantController.saveAccountant();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.getMessage();
-                }
                 scanner.nextLine();
                 break;
 
             case 8:
                 AccountantController.listAccountant();
-                //AccountantView.printAccountant(AccountantRegistry.readAccountantsFromFile());
-                //AccountantRegistry.showAccounutants();
                 state = State.LOGGED_IN_AS_ADMIN;
                 scanner.nextLine();
                 break;
@@ -306,12 +290,10 @@ public class Main {
             case 9:
                 state = State.DELETING_COMPANY;
                 scanner.nextLine();
-                CompanyController.saveCompanies();
                 break;
 
             case 10:
                 state = State.CHANGE_COMPANY;
-                CompanyController.saveCompanies();
                 break;
 
             case 11:
@@ -322,16 +304,9 @@ public class Main {
             case 12:
                 state = State.INIT;
                 scanner.nextLine();
-                AdminController.readAmin();
                 break;
 
             case 0:
-                try {
-                    AccountantController.saveAccountant();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.getMessage();
-                }
-                AdminController.saveAdmin();
                 state = State.EXIT;
                 scanner.nextLine();
                 break;
@@ -379,7 +354,6 @@ public class Main {
             try {
                 if (CompanyRegistry.getInstance().validateNIP(nip)) {
                     CompanyController.createCompany(nip, name, yearFound);
-                    CompanyController.saveCompanies();
                     isAccurate = true;
                 }
             } catch (ValidateNipException e) {
@@ -399,23 +373,16 @@ public class Main {
     private static State printCreatingAdmin(Scanner scanner) throws IOException {
         System.out.println("Podaj login nowego admina:");
         String login = scanner.nextLine();
-
         System.out.println("Podaj haslo nowego admina:");
         String password = scanner.nextLine();
-
         AdminController.createAdmin(login, password);
-        AdminController.saveAdmin();
-
         return State.LOGGED_IN_AS_ADMIN;
     }
 
     private static State printDeletingAdmin(Scanner scanner) throws IOException {
         System.out.println("Podaj login admina do usunięcia:");
         String login = scanner.nextLine();
-
         AdminController.removeAdmin(login);
-        AdminController.saveAdmin();
-
         return State.LOGGED_IN_AS_ADMIN;
     }
 
@@ -425,7 +392,6 @@ public class Main {
 
         try {
             CompanyController.removeCompany(nip);
-            CompanyController.saveCompanies();
         } catch (CompanyNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -441,7 +407,6 @@ public class Main {
 
         try {
             AccountantController.createAccountant(login, password);
-            AccountantController.saveAccountant();
 
         } catch (AccountantAlreadyExistException | AccountantPasswordIsToShort | AccountantWrongLogin e) {
             System.out.println(e.getMessage());
@@ -455,7 +420,6 @@ public class Main {
         String login = scanner.nextLine();
         try {
             AccountantController.removeAccountant(login);
-            AccountantController.saveAccountant();
         } catch (AccountantNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -473,6 +437,8 @@ public class Main {
             AccountantCompanyAssociationController.createAccountantCompanyAssociation(login, nip);
         } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException e) {
             System.out.println(e.getMessage());
+        } catch (IOException | AccountantPasswordIsToShort | AccountantWrongLogin | ClassNotFoundException | AccountantAlreadyExistException e) {
+            e.printStackTrace();
         }
         return State.LOGGED_IN_AS_ADMIN;
 
@@ -494,8 +460,6 @@ public class Main {
                     System.out.println("Podaj nowy nip firmy");
                     String newNip = scanner.nextLine();
                     CompanyRegistry.getInstance().uiForChangingNip(company, newNip);
-                    CompanyController.saveCompanies();
-
 
                 } catch (CompanyNotFoundException | ValidateNipException e) {
                     System.out.println(e.getMessage());
@@ -514,7 +478,6 @@ public class Main {
                     System.out.println("Podaj nowa nazwe firmy");
                     String newName = scanner.nextLine();
                     CompanyRegistry.getInstance().uiForChangingName(company, newName);
-                    CompanyController.saveCompanies();
                 } catch (CompanyNotFoundException e) {
                     System.out.println(e.getMessage());
                 }

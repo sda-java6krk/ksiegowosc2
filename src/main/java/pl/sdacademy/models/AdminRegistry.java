@@ -1,5 +1,6 @@
 package pl.sdacademy.models;
 
+import pl.sdacademy.controllers.AdminController;
 import pl.sdacademy.exceptions.AdminNotFoundException;
 
 import java.io.*;
@@ -36,7 +37,7 @@ public class AdminRegistry extends Admin implements Serializable {
         throw new AdminNotFoundException();
     }
 
-    public void addAdmin(Admin admin) {
+    public void addAdmin(Admin admin) throws IOException {
         boolean exist = false;
 
         if (admin.getLogin().equals(null) || admin.getLogin().equals("") || admin.getLogin().contains(" ")) {
@@ -56,15 +57,17 @@ public class AdminRegistry extends Admin implements Serializable {
         }
         if (!exist) {
             this.admins.add(admin);
+            AdminController.saveAdmin();
         }
 
     }
 
-    public void remove(String login) {
+    public void remove(String login) throws IOException {
         boolean removed = false;
         for (int i = 0; i < admins.size(); i++) {
             if (admins.get(i).getLogin().equals(login)) {
                 admins.remove(admins.get(i));
+                AdminController.saveAdmin();
                 removed = true;
             }
 

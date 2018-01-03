@@ -1,5 +1,6 @@
 package pl.sdacademy.models;
 
+import pl.sdacademy.controllers.CompanyController;
 import pl.sdacademy.exceptions.CompanyNotFoundException;
 import pl.sdacademy.exceptions.CompanyWrongYearFoundException;
 import pl.sdacademy.exceptions.ValidateNipException;
@@ -27,11 +28,12 @@ public class CompanyRegistry extends Company implements Serializable{
 
     }
 
-    public void remove(String nip) throws CompanyNotFoundException {
+    public void remove(String nip) throws CompanyNotFoundException, IOException {
         boolean removed = false;
         for (int i = 0; i < companies.size(); i++) {
             if (companies.get(i).getNip().equals(nip)) {
                 companies.remove(companies.get(i));
+                CompanyController.saveCompanies();
                 removed = true;
             }
 
@@ -62,14 +64,16 @@ public class CompanyRegistry extends Company implements Serializable{
         throw new CompanyNotFoundException("Nie ma firmy o tej nazwie");
     }
 
-    public void changeNipForCompany(Company company, String newNip) throws ValidateNipException {
+    public void changeNipForCompany(Company company, String newNip) throws ValidateNipException, IOException {
         validateNIP(newNip);
         company.setNip(newNip);
+        CompanyController.saveCompanies();
     }
 
 
-    public void changeNameForCompany(Company company, String newName) {
+    public void changeNameForCompany(Company company, String newName) throws IOException {
         company.setName(newName);
+        CompanyController.saveCompanies();
     }
 
     public ArrayList<Company> getCompanies() {
@@ -85,6 +89,7 @@ public class CompanyRegistry extends Company implements Serializable{
 
     public void addCompany(Company company) throws IOException {
         this.companies.add(company);
+        CompanyController.saveCompanies();
     }
 
 
@@ -120,7 +125,7 @@ public class CompanyRegistry extends Company implements Serializable{
     }
 
 
-    public void uiForChangingNip(Company company, String nip) throws ValidateNipException {
+    public void uiForChangingNip(Company company, String nip) throws ValidateNipException, IOException {
         if (validateNIP(nip)) {
             changeNipForCompany(company, nip);
         } else {
@@ -128,7 +133,7 @@ public class CompanyRegistry extends Company implements Serializable{
         }
     }
 
-    public void uiForChangingName(Company company, String name) {
+    public void uiForChangingName(Company company, String name) throws IOException {
         changeNameForCompany(company, name);
     }
 

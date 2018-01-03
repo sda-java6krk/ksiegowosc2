@@ -1,5 +1,6 @@
 package pl.sdacademy.models;
 
+import pl.sdacademy.controllers.AccountantController;
 import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
@@ -17,10 +18,9 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
     public AccountantRegistry() {
         this.accountants = new HashSet<>();
-//tutaj powinno byc wczytywanie ksiegowych
     }
 
-    public static AccountantRegistry getInstance() {
+    public static AccountantRegistry getInstance()  {
         if (instance == null) {
             instance = new AccountantRegistry();
         }
@@ -59,7 +59,7 @@ public class AccountantRegistry extends Accountant implements Serializable {
         accountants = new HashSet<>();
     }
 
-    public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException,AccountantPasswordIsToShort,AccountantWrongLogin {
+    public void addAccountant(Accountant accountant) throws AccountantAlreadyExistException, AccountantPasswordIsToShort, AccountantWrongLogin, IOException, ClassNotFoundException {
 
             if (accountant.getLogin().trim().length() < 1) {
                 throw new AccountantWrongLogin("Nie moze byc pusty login! ");
@@ -75,17 +75,18 @@ public class AccountantRegistry extends Accountant implements Serializable {
                     String password = accountant.getPassword();
                     accountant = new Accountant(login, password);
                     accountants.add(accountant);
-                    //TODO tutaj powinno byc dodanie ksiegowego
+                    AccountantController.saveAccountant();
                 }
             }
         }
 
-    public void removeAccountant(String login) throws AccountantNotFoundException {
+    public void removeAccountant(String login) throws AccountantNotFoundException, IOException, ClassNotFoundException {
         boolean removed = false;
 
         for (Accountant accountant : accountants) {
             if (accountant.getLogin().equals(login)) {
                 accountants.remove(accountant);
+                AccountantController.saveAccountant();
                 removed = true;
                 break;
             }

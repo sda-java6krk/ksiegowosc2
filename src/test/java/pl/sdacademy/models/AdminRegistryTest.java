@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 public class AdminRegistryTest {
     @Test
-    public void shouldAddAdmin() {
+    public void shouldAddAdmin() throws IOException {
         Admin created = new Admin("Anna", "321");
         AdminRegistry.getInstance().addAdmin(created);
 
@@ -29,7 +29,7 @@ public class AdminRegistryTest {
     }
 
     @Test(expected = AdminNotFoundException.class)
-    public void shouldRemoveAdmin() throws AdminNotFoundException {
+    public void shouldRemoveAdmin() throws AdminNotFoundException, IOException {
         Admin created = new Admin("Anna", "321");
         AdminRegistry.getInstance().addAdmin(created);
 
@@ -38,20 +38,20 @@ public class AdminRegistryTest {
     }
 
     @Test(expected = AdminNotFoundException.class)
-    public void shouldNotAddAdminBadLogin() throws AdminNotFoundException {
+    public void shouldNotAddAdminBadLogin() throws AdminNotFoundException, IOException {
         Admin created = new Admin("  ", "321");
         AdminRegistry.getInstance().addAdmin(created);
         Admin result = AdminRegistry.getInstance().findAdmin("  ", "321");
     }
 
     @Test(expected = AdminNotFoundException.class)
-    public void shouldNotAddAdminBadPassword() throws AdminNotFoundException {
+    public void shouldNotAddAdminBadPassword() throws AdminNotFoundException, IOException {
         Admin created = new Admin("Anna", " 12");
         AdminRegistry.getInstance().addAdmin(created);
         Admin result = AdminRegistry.getInstance().findAdmin("Anna", " 12");
     }
     @Test
-    public void shouldNotAddCopyAdmin() {
+    public void shouldNotAddCopyAdmin() throws IOException {
         Admin created = new Admin("Anna", "123");
         AdminRegistry.getInstance().addAdmin(created);
 
