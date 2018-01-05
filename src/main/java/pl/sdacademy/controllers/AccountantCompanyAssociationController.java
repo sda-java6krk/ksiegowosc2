@@ -12,4 +12,11 @@ public class AccountantCompanyAssociationController {
         AccountantCompanyAssociationRegistry.getInstance().addAccountantCompanyAssociation(new AccountantCompanyAssociation(accountantLogin,companyNip));
     }
 
+    public static void saveAccountantCompanyAssociation() throws IOException, ClassNotFoundException {
+        AccountantCompanyAssociationRegistry.saveAccountantCompanyAssiociationToFile(AccountantCompanyAssociationRegistry.getInstance().getAccountantCompanyAssociations());
+    }
+
+    public static void readAccountantCompanyAssociation() throws ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, IOException, AccountantWrongLogin, AccountantCompanyAssociationAlreadyExistException, AccountantNotFoundException, CompanyNotFoundException {
+        AccountantCompanyAssociationRegistry.readAccountantCompanyAssiociation(AccountantCompanyAssociationRegistry.getInstance().getAccountantCompanyAssociations());
+    }
 }

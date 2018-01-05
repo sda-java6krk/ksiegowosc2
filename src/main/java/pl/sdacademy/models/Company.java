@@ -60,4 +60,5 @@ public class Company implements Serializable{
     public void setInvoices(List<Invoice> invoices) {
         this.invoices = invoices;
     }
+
 }

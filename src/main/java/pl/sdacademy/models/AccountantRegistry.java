@@ -7,7 +7,6 @@ import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AccountantWrongLogin;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,33 +28,23 @@ public class AccountantRegistry extends Accountant implements Serializable {
 
 
     public static void saveAccountantToFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException {
-        ObjectOutputStream objectOutputStream =
-
-                new ObjectOutputStream(new FileOutputStream("src/main/resources/myAccountantRegistry.bin"));
-
-
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("src/main/resources/myAccountantRegistry.bin"));
         objectOutputStream.writeObject(accountants);
         objectOutputStream.close();
-
     }
 
     public static void readAccountantsFromFile(Set<Accountant> accountants) throws IOException, ClassNotFoundException, AccountantPasswordIsToShort, AccountantAlreadyExistException, AccountantWrongLogin {
 
-        ObjectInputStream objectInputStream =
-
-                new ObjectInputStream(new FileInputStream("src/main/resources/myAccountantRegistry.bin"));
-
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("src/main/resources/myAccountantRegistry.bin"));
         Set<Accountant> list = (Set<Accountant>) objectInputStream.readObject();
-
-
         getInstance().removeAllAccountants();
         for (Accountant a : list) {
             getInstance().addAccountant(a);
         }
-
         objectInputStream.close();
     }
-    public void removeAllAccountants(){
+
+    private void removeAllAccountants(){
         accountants = new HashSet<>();
     }
 

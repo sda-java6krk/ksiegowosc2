@@ -1,14 +1,20 @@
 package pl.sdacademy;
 
+import pl.sdacademy.associations.AccountantCompanyAssociation;
+import pl.sdacademy.associations.AccountantCompanyAssociationRegistry;
 import pl.sdacademy.controllers.*;
 import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.*;
+import pl.sdacademy.views.CompanyView;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static pl.sdacademy.Main.State.CREATING_INVOICE;
+import static pl.sdacademy.associations.AccountantCompanyAssociationRegistry.readAccountantCompanyAssiociation;
 
 public class Main {
 
@@ -43,12 +49,12 @@ public class Main {
                 }
 
                 case LOGGING_IN_AS_ACCOUNTANT: {
-                    state = printLoggingInAsAccountant(scanner, null);
+                    state = printLoggingInAsAccountant(scanner);
                     break;
                 }
 
                 case LOGGING_IN_AS_ADMIN: {
-                    state = printLoggingInAsAdmin(scanner, null);
+                    state = printLoggingInAsAdmin(scanner);
                     break;
                 }
 
@@ -119,6 +125,13 @@ public class Main {
         }
         AdminController.readAdmin();
         CompanyController.readCompany();
+
+        try {
+            AccountantCompanyAssociationController.readAccountantCompanyAssociation();
+        } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
         System.out.println("Dzień dobry, co chcesz zrobić?");
         System.out.println(" 1 - zalogować się jako accountant");
         System.out.println(" 2 - zalogować się jako admin");
@@ -149,7 +162,9 @@ public class Main {
         return state;
     }
 
-    private static State printLoggingInAsAccountant(Scanner scanner, Accountant currentAccountant) {
+    // zalogowany ksiegowy
+    private static Accountant [] accountants1 = new Accountant [1];
+    private static State printLoggingInAsAccountant(Scanner scanner) {
         System.out.println("Podaj login:");
         String login = scanner.nextLine();
 
@@ -157,8 +172,9 @@ public class Main {
         String password = scanner.nextLine();
 
         try {
-            currentAccountant = AccountantRegistry.getInstance().findAccountant(login, password);
+            Accountant currentAccountant = AccountantRegistry.getInstance().findAccountant(login, password);
             System.out.println("Dzień dobry " + currentAccountant.getLogin());
+            accountants1[0] = currentAccountant;
             return State.LOGGED_IN_AS_ACCOUNTANT;
 
         } catch (AccountantNotFoundException e) {
@@ -167,7 +183,7 @@ public class Main {
         }
     }
 
-    private static State printLoggingInAsAdmin(Scanner scanner, Admin currentAdmin) {
+    private static State printLoggingInAsAdmin(Scanner scanner) {
         System.out.println("Podaj login:");
         String login = scanner.nextLine();
 
@@ -175,7 +191,7 @@ public class Main {
         String password = scanner.nextLine();
 
         try {
-            currentAdmin = AdminRegistry.getInstance().findAdmin(login, password);
+            Admin currentAdmin = AdminRegistry.getInstance().findAdmin(login, password);
             System.out.println("Dzień dobry " + currentAdmin.getLogin());
             return State.LOGGED_IN_AS_ADMIN;
 
@@ -189,8 +205,9 @@ public class Main {
 
         System.out.println("Co chcesz zrobić?");
         System.out.println(" 1 - wypisać wszystkie firmy");
-        System.out.println(" 2 - dodac fakture");
-        System.out.println(" 3 - menu");
+        System.out.println(" 2 - wypisać Twoje firmy");
+        System.out.println(" 3 - dodac fakture");
+        System.out.println(" 4 - menu");
         System.out.println(" 0 - wyjść z programu");
 
         switch (scanner.nextInt()) {
@@ -202,11 +219,27 @@ public class Main {
                 break;
 
             case 2:
-                state = CREATING_INVOICE;
+                List<Company> companyList = new ArrayList<>();
+                for (AccountantCompanyAssociation accountantCompanyAssociation : AccountantCompanyAssociationRegistry.getInstance().getAccountantCompanyAssociations()) {
+                    if (accountantCompanyAssociation.getAccountantLogin().equals(accountants1[0].getLogin())) {
+                        try {
+                            companyList.add(CompanyRegistry.getInstance().findCompanyByNip(accountantCompanyAssociation.getNip()));
+                        } catch (CompanyNotFoundException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+                CompanyView.printCompanies(companyList);
+                state = State.LOGGED_IN_AS_ACCOUNTANT;
                 scanner.nextLine();
                 break;
 
             case 3:
+                state = CREATING_INVOICE;
+                scanner.nextLine();
+                break;
+
+            case 4:
                 state = State.INIT;
                 scanner.nextLine();
                 break;
@@ -324,7 +357,6 @@ public class Main {
     private static State printCreatingCompany(Scanner scanner) {
         System.out.println("Podaj nazwę nowej firmy:");
         String name = scanner.nextLine();
-
         System.out.println("Podaj rok założenia nowej firmy:");
         int yearFound = scanner.nextInt();
         scanner.nextLine();
@@ -370,6 +402,7 @@ public class Main {
         return State.LOGGED_IN_AS_ADMIN;
 
     }
+
     private static State printCreatingAdmin(Scanner scanner) throws IOException {
         System.out.println("Podaj login nowego admina:");
         String login = scanner.nextLine();
@@ -435,13 +468,10 @@ public class Main {
 
         try {
             AccountantCompanyAssociationController.createAccountantCompanyAssociation(login, nip);
-        } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException e) {
+        } catch (AccountantCompanyAssociationAlreadyExistException | AccountantNotFoundException | CompanyNotFoundException | IOException | AccountantPasswordIsToShort | AccountantWrongLogin | ClassNotFoundException | AccountantAlreadyExistException e) {
             System.out.println(e.getMessage());
-        } catch (IOException | AccountantPasswordIsToShort | AccountantWrongLogin | ClassNotFoundException | AccountantAlreadyExistException e) {
-            e.printStackTrace();
         }
         return State.LOGGED_IN_AS_ADMIN;
-
     }
 
     private static State printChangeCompany(Scanner scanner, State state) throws IOException {
