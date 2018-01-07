@@ -60,15 +60,17 @@ public class AccountantRegistryTest {
         AccountantRegistry.getInstance().addAccountant(accountant);
     }
 
-    @Test(expected = AccountantAlreadyExistException.class)
+    @Test
     public void shouldNotAddAccountantWhenExist() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+        thrown.expect(AccountantAlreadyExistException.class);
         Accountant accountant = new Accountant("Anna", "123");
         AccountantRegistry.getInstance().addAccountant(accountant);
         AccountantRegistry.getInstance().addAccountant(accountant);
     }
 
-    @Test(expected = AccountantPasswordIsToShort.class)
+    @Test
     public void shouldNotAddAccountantPasswordToShort() throws AccountantAlreadyExistException, AccountantWrongLogin, AccountantPasswordIsToShort, AccountantNotFoundException {
+        thrown.expect(AccountantPasswordIsToShort.class);
         Accountant accountant = new Accountant("Anna", " 32");
         AccountantRegistry.getInstance().addAccountant(accountant);
     }

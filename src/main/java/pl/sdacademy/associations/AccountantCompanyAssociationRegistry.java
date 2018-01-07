@@ -15,10 +15,14 @@ public class AccountantCompanyAssociationRegistry {
     private Set<AccountantCompanyAssociation> AccountantCompanyAssociations;
 
 
+    public Set<AccountantCompanyAssociation> getAccountantCompanyAssociations() {
+        return AccountantCompanyAssociations;
+    }
+
     public AccountantCompanyAssociationRegistry() {
         this.AccountantCompanyAssociations = new HashSet<>();
 
-        this.AccountantCompanyAssociations.add(new AccountantCompanyAssociation("tomasz","3623981230"));
+        this.AccountantCompanyAssociations.add(new AccountantCompanyAssociation("tomasz", "3623981230"));
         this.AccountantCompanyAssociations.add(new AccountantCompanyAssociation("marek", "7251801126"));
     }
 
@@ -30,17 +34,16 @@ public class AccountantCompanyAssociationRegistry {
     }
 
     public void addAccountantCompanyAssociation(AccountantCompanyAssociation AccountantCompanyAssociation) throws AccountantCompanyAssociationAlreadyExistException, AccountantNotFoundException, CompanyNotFoundException {
-        if(!AccountantRegistry.getInstance().findAccountantByLogin(AccountantCompanyAssociation.getAccountantLogin())){
+        if (!AccountantRegistry.getInstance().findAccountantByLogin(AccountantCompanyAssociation.getAccountantLogin())) {
             throw new AccountantNotFoundException("Ksiegowy o loginie " + AccountantCompanyAssociation.getAccountantLogin() + " nie istnieje");
         }
 
-        if(CompanyRegistry.getInstance().findCompanyByNip(AccountantCompanyAssociation.getNip()) == null){
-            throw new AccountantNotFoundException("Firma o NIPie " + AccountantCompanyAssociation.getNip() + " nie istnieje");
-        }
+        //if Company is not present in CompanyRegistry, then exception will be thrown from findCompanyByNip method
+        CompanyRegistry.getInstance().findCompanyByNip(AccountantCompanyAssociation.getNip());
 
         if (AccountantCompanyAssociations.contains(AccountantCompanyAssociation)) {
             throw new AccountantCompanyAssociationAlreadyExistException("Podane przypisanie Ksiegowy-Firma juz istnieje");
-        }else {
+        } else {
             AccountantCompanyAssociations.add(AccountantCompanyAssociation);
         }
     }

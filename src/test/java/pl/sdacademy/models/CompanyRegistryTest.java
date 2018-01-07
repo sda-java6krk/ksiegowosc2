@@ -1,13 +1,24 @@
 package pl.sdacademy.models;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import pl.sdacademy.exceptions.CompanyNotFoundException;
 import pl.sdacademy.exceptions.ValidateNip;
 
 import static org.junit.Assert.*;
 
 public class CompanyRegistryTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    @After
+    public void after() {
+        CompanyRegistry.getInstance().getCompanies().clear();
+    }
+
+    @Before
+    public void before() {
+        CompanyRegistry.getInstance().getCompanies().clear();
+    }
 
     @Test
     public void shouldFindCompanyForNip() throws ValidateNip, CompanyNotFoundException {
@@ -19,8 +30,9 @@ public class CompanyRegistryTest {
         Assert.assertEquals(create, result);
     }
 
-    @Test(expected = CompanyNotFoundException.class)
+    @Test
     public void shouldNotFindCompanyForMissingNip() throws ValidateNip, CompanyNotFoundException {
+        thrown.expect(CompanyNotFoundException.class);
         Company create = new Company("77322869821", "", 1);
         CompanyRegistry.getInstance().add(create);
 
@@ -67,13 +79,15 @@ public class CompanyRegistryTest {
 
         CompanyRegistry.getInstance().getCompanies().clear();
     }
-    @Test(expected = ValidateNip.class)
+    @Test
     public void shouldValidateNipByLengthLongest() throws ValidateNip {
+        thrown.expect(ValidateNip.class);
         String create = "773228698211";
         CompanyRegistry.getInstance().validateNIP(create);
     }
-    @Test(expected = ValidateNip.class)
+    @Test
     public void shouldValidateNipByLengthShorts() throws ValidateNip {
+        thrown.expect(ValidateNip.class);
         String create = "7732286982";
         CompanyRegistry.getInstance().validateNIP(create);
     }
