@@ -2,9 +2,6 @@ package pl.sdacademy.models;
 
 import java.math.BigDecimal;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class Invoice {
 
     private String type;
@@ -15,7 +12,6 @@ public class Invoice {
     private static int idBuy = 0;
     private int invoiceIdSale;
     private int invoiceIdBuy;
-
 
 
     public Invoice(String type, BigDecimal netAmount, double vat, boolean paid) {

@@ -3,9 +3,6 @@ package pl.sdacademy.models;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class Accountant implements Serializable {
     protected String login;
     protected String password;

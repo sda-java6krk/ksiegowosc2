@@ -5,17 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by marcin on 13.12.2017.
- */
-public class Company implements Serializable{
+public class Company implements Serializable {
     private String name;
     private int yearFound;
     private String nip;
     private Set<Accountant> accountants;
     private List<Invoice> invoices = new ArrayList<>();
 
-    public Company(String nip,String name, int yearFound) {
+    public Company(String nip, String name, int yearFound) {
         this.name = name;
         this.yearFound = yearFound;
         this.nip = nip;
@@ -60,4 +57,5 @@ public class Company implements Serializable{
     public void setInvoices(List<Invoice> invoices) {
         this.invoices = invoices;
     }
+
 }

@@ -3,14 +3,12 @@ package pl.sdacademy.models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class Client {
     private String name;
     private String surname;
     private String nip;
     private List<Invoice> invoicesForClient = new ArrayList<>();
+
     public Client(String name, String surname, String nip) {
         this.name = name;
         this.surname = surname;

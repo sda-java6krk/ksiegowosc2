@@ -6,15 +6,12 @@ import pl.sdacademy.exceptions.AdminNotFoundException;
 import java.io.*;
 import java.util.*;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class AdminRegistry extends Admin implements Serializable {
     private static AdminRegistry instance = null;
     private ArrayList<Admin> admins;
 
     public AdminRegistry() {
-        this.admins = new ArrayList<>();
+       this.admins = new ArrayList<>();
     }
 
     public ArrayList<Admin> getAdmins() {
@@ -93,7 +90,7 @@ public class AdminRegistry extends Admin implements Serializable {
 
         getInstance().removeAllAdmins();
 
-        for(Admin a : list) {
+        for (Admin a : list) {
             getInstance().addAdmin(a);
         }
         objectInputStream.close();

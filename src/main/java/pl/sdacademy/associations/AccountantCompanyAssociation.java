@@ -1,6 +1,8 @@
 package pl.sdacademy.associations;
 
-public class AccountantCompanyAssociation{
+import java.io.Serializable;
+
+public class AccountantCompanyAssociation implements Serializable{
 
     private String nip;
     private String accountantLogin;
@@ -9,6 +11,10 @@ public class AccountantCompanyAssociation{
     public AccountantCompanyAssociation(String accountantLogin, String nip) {
         this.nip = nip;
         this.accountantLogin = accountantLogin;
+    }
+
+    public AccountantCompanyAssociation() {
+
     }
 
     public String getNip() {
