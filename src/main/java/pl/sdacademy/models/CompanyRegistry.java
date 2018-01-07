@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanyRegistry extends Company implements Serializable{
+public class CompanyRegistry extends Company implements Serializable {
     private static CompanyRegistry instance = null;
 
     public static CompanyRegistry getInstance() {
@@ -81,9 +81,9 @@ public class CompanyRegistry extends Company implements Serializable{
     }
 
     public boolean searchIfCompanyYearOfFoundIsGood(int companyYear) throws CompanyWrongYearFoundException {
-       if(companyYear >= 1800 && companyYear <= 2018){
-           return true;
-            }
+        if (companyYear >= 1800 && companyYear <= 2018) {
+            return true;
+        }
         throw new CompanyWrongYearFoundException("Zly rok zalozenia firmy");
     }
 
@@ -152,7 +152,7 @@ public class CompanyRegistry extends Company implements Serializable{
 
         getInstance().removeAllCompanies();
 
-        for(Company a : list) {
+        for (Company a : list) {
             getInstance().addCompany(a);
         }
         objectInputStream.close();

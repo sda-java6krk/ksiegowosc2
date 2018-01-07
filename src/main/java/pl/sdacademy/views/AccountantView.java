@@ -4,12 +4,8 @@ import pl.sdacademy.models.Accountant;
 
 import java.util.Set;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class AccountantView {
 
-    
 
     public static void printAccountant(Set<Accountant> accountantList) {
 
@@ -18,7 +14,6 @@ public class AccountantView {
             System.out.println("login: " + accountant.getLogin());
         }
     }
-
 
 
 }

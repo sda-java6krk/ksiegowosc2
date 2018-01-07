@@ -5,7 +5,6 @@ import pl.sdacademy.exceptions.AccountantAlreadyExistException;
 import pl.sdacademy.exceptions.AccountantNotFoundException;
 import pl.sdacademy.exceptions.AccountantPasswordIsToShort;
 import pl.sdacademy.exceptions.AccountantWrongLogin;
-
 import java.io.*;
 import java.util.HashSet;
 import java.util.Set;

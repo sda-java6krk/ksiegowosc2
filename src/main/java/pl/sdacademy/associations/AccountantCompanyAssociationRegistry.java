@@ -3,11 +3,8 @@ package pl.sdacademy.associations;
 import pl.sdacademy.controllers.AccountantCompanyAssociationController;
 import pl.sdacademy.exceptions.*;
 import pl.sdacademy.models.AccountantRegistry;
-import pl.sdacademy.models.Admin;
 import pl.sdacademy.models.CompanyRegistry;
-
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

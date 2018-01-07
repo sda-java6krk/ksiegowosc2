@@ -4,9 +4,6 @@ import pl.sdacademy.models.*;
 
 import java.math.BigDecimal;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class InvoiceController {
 
     public static void createInvoiceForComapny(String type, BigDecimal netAmount, double vat, boolean paid, Company company){

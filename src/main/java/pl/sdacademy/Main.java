@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import static pl.sdacademy.Main.State.CREATING_INVOICE;
-import static pl.sdacademy.associations.AccountantCompanyAssociationRegistry.readAccountantCompanyAssiociation;
 
 public class Main {
 
@@ -163,7 +162,8 @@ public class Main {
     }
 
     // zalogowany ksiegowy
-    private static Accountant [] accountants1 = new Accountant [1];
+    private static Accountant accountants1 = new Accountant();
+
     private static State printLoggingInAsAccountant(Scanner scanner) {
         System.out.println("Podaj login:");
         String login = scanner.nextLine();
@@ -174,7 +174,7 @@ public class Main {
         try {
             Accountant currentAccountant = AccountantRegistry.getInstance().findAccountant(login, password);
             System.out.println("Dzień dobry " + currentAccountant.getLogin());
-            accountants1[0] = currentAccountant;
+            accountants1 = currentAccountant;
             return State.LOGGED_IN_AS_ACCOUNTANT;
 
         } catch (AccountantNotFoundException e) {
@@ -221,7 +221,7 @@ public class Main {
             case 2:
                 List<Company> companyList = new ArrayList<>();
                 for (AccountantCompanyAssociation accountantCompanyAssociation : AccountantCompanyAssociationRegistry.getInstance().getAccountantCompanyAssociations()) {
-                    if (accountantCompanyAssociation.getAccountantLogin().equals(accountants1[0].getLogin())) {
+                    if (accountantCompanyAssociation.getAccountantLogin().equals(accountants1.getLogin())) {
                         try {
                             companyList.add(CompanyRegistry.getInstance().findCompanyByNip(accountantCompanyAssociation.getNip()));
                         } catch (CompanyNotFoundException e) {

@@ -7,13 +7,8 @@ import pl.sdacademy.exceptions.AccountantWrongLogin;
 import pl.sdacademy.models.Accountant;
 import pl.sdacademy.models.AccountantRegistry;
 import pl.sdacademy.views.AccountantView;
-
 import java.io.IOException;
-import java.util.List;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class AccountantController {
 
     private static final AccountantRegistry accountantRegistry = AccountantRegistry.getInstance();

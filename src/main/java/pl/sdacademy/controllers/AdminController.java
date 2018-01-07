@@ -3,13 +3,9 @@ package pl.sdacademy.controllers;
 import pl.sdacademy.models.Admin;
 import pl.sdacademy.models.AdminRegistry;
 import pl.sdacademy.views.AdminView;
-
 import java.io.IOException;
-import java.util.List;
 
-/**
- * Created by marcin on 13.12.2017.
- */
+
 public class AdminController {
 
     public static void createAdmin(String login, String password) throws IOException {

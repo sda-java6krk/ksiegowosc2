@@ -6,12 +6,8 @@ import pl.sdacademy.exceptions.ValidateNipException;
 import pl.sdacademy.models.Company;
 import pl.sdacademy.models.CompanyRegistry;
 import pl.sdacademy.views.CompanyView;
-
 import java.io.IOException;
 
-/**
- * Created by marcin on 13.12.2017.
- */
 public class CompanyController {
 
 
